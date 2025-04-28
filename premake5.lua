@@ -26,6 +26,9 @@ project "SakuraEngine"       -- 项目文件(.vcxproj)
     targetdir("bin/" .. outputdir .. "/%{prj.name}")  -- 输出目录
     objdir("bin_int/" .. outputdir .. "/%{prj.name}") -- 中间文件目录
 
+    pchheader "sakuraPCH.h" -- 从 premake5.lua 文件当前目录寻找预编译头文件的头文件
+    pchsource "SakuraEngine/src/sakuraPCH.cpp" -- 从项目根目录寻找编译头文件的源文件
+
     files
     {
         "%{prj.name}/src/**.h",  -- 递归包含所有 .h 文件
@@ -34,7 +37,8 @@ project "SakuraEngine"       -- 项目文件(.vcxproj)
 
     includedirs     --定义头文件路径
     {
-        "%{prj.name}/vendor/spdlog/include"
+        "%{prj.name}/vendor/spdlog/include",
+        "SakuraEngine/src"
     }
 
     filter "system:windows"          --配置 Windows 系统

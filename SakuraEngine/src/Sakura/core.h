@@ -14,8 +14,3 @@
 #endif
 
 #define BIT(x) ( 1 << x )
-
-
-
-#include <stdio.h>
-#include <memory>

@@ -1,9 +1,7 @@
 #pragma once
+#include "sakuraPCH.h"
+#include "Sakura/core.h"
 
-#include "../core.h"
-
-#include <string>
-#include <functional>
 
 namespace Sakura
 {
@@ -13,7 +11,7 @@ namespace Sakura
 	enum class EventType //枚举事件类型(强类型枚举:必须使用作用域前缀,不可隐式转换为整数，必须显式转换(static_cast))
 	{
 		None = 0,
-		WindowClose, WindowResize, WindowFocus, WindowMoved,
+		WindowClose, WindowResize, WindowFocus, WindowMoved, 
 		AppTick, AppUpdata, AppRender,
 		KeyPressed, KeyReleased,
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
@@ -33,7 +31,7 @@ namespace Sakura
 //定义简化事件系统实现的工具
 	//##（标记粘贴操作符）：将 EventType::与宏参数 type 连接成完整的枚举值
 	//#（字符串化操作符）: 将宏参数 type 转换为字符串字面量。
-	//其子类通过预处理器自动生成事件类的关键接口，减少重复代码
+	//其子类通过预处理器自动生成事件类的关键接口，减少重复代码.
 #define EVENT_CLASS_TYPE(type) static EventType getStaticType() { return type; }\
 								virtual EventType getEventType() const override { return getStaticType(); }\
 								virtual const char* getName_C() const override { return #type; }
@@ -54,7 +52,7 @@ namespace Sakura
 		}
 
 	protected:
-		bool mHandled = false;//事件处理是否完成
+		bool mHandled = false;//事件是否处于处理状态
 	};
 
 	//事件分发器(用于将事件动态分派给对应的处理函数)
@@ -92,6 +90,16 @@ namespace Sakura
 	private:
 		Event& mEvent;
 	};
+
+	/*
+	dispatcher.Dispatch<KeyPressedEvent>([](KeyPressedEvent& e) 
+	{
+		if (e.GetKeyCode() == KEY_W) {
+			player.MoveForward();
+		}
+		return true; //返回 true 表示 event 处于处理事件状态，否则返回 false。
+	});
+	*/
 
 	//将 Event 对象直接输出到流中,无需显式调用 ToString() 方法
 	inline std::ostream& operator<<(std::ostream& os, const Event& e)//std::ostream 不允许拷贝构造，因此参数必须是引用类型 std::ostream&

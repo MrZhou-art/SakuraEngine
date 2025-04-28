@@ -4,6 +4,9 @@
     <Filter Include="Sakura">
       <UniqueIdentifier>{2C2793D0-18C9-BDA6-0184-D1FAEDC444F7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sakura\Events">
+      <UniqueIdentifier>{9089677B-FC49-E3B1-C584-2C2F3104288E}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Sakura.h" />
@@ -13,16 +16,25 @@
     <ClInclude Include="src\Sakura\EntryPoint.h">
       <Filter>Sakura</Filter>
     </ClInclude>
+    <ClInclude Include="src\Sakura\Events\ApplicationEvent.h">
+      <Filter>Sakura\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Sakura\Events\Event.h">
+      <Filter>Sakura\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Sakura\Events\KeyEvent.h">
+      <Filter>Sakura\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Sakura\Events\MouseEvent.h">
+      <Filter>Sakura\Events</Filter>
+    </ClInclude>
     <ClInclude Include="src\Sakura\Log.h">
       <Filter>Sakura</Filter>
     </ClInclude>
     <ClInclude Include="src\Sakura\core.h">
       <Filter>Sakura</Filter>
     </ClInclude>
-    <ClInclude Include="src\Sakura\Events\Event.h" />
-    <ClInclude Include="src\Sakura\Events\KeyEvent.h" />
-    <ClInclude Include="src\Sakura\Events\MouseEvent.h" />
-    <ClInclude Include="src\Sakura\Events\ApplicationEvent.h" />
+    <ClInclude Include="src\sakuraPCH.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Sakura\Application.cpp">
@@ -31,5 +43,6 @@
     <ClCompile Include="src\Sakura\Log.cpp">
       <Filter>Sakura</Filter>
     </ClCompile>
+    <ClCompile Include="src\sakuraPCH.cpp" />
   </ItemGroup>
 </Project>

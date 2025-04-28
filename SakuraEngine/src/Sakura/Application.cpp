@@ -1,3 +1,4 @@
+#include "sakuraPCH.h"
 #include "Application.h"
 
 #include "Sakura/Events/ApplicationEvent.h"
@@ -25,7 +26,7 @@ namespace Sakura
 			SAKURA_TRACE(e.ToString());
 		}
 
-		while (true)
+		while (true)//
 		{
 
 		}
