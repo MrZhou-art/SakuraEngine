@@ -1,6 +1,7 @@
 #pragma once
 
-#include "core.h"
+#include "Sakura/core.h"
+#include "Sakura/Events/Event.h"
 
 namespace Sakura
 {
