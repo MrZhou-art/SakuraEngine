@@ -13,7 +13,7 @@ public:
 	}
 };
 
-Sakura::Application * Sakura::createApplication()
+Sakura::Application* Sakura::createApplication()
 {
 	return new Sandbox();
 }

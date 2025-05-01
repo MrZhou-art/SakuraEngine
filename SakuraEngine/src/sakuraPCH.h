@@ -14,6 +14,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "Sakura/Log.h"
+
 #ifdef SKR_PLATFORM_WINDOWS
 	#include <Windows.h>
 #endif

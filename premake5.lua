@@ -18,6 +18,12 @@ workspace "SakuraEngine"      --解决方案(.sln)
 --%{cfg.buildtarget.relpath}	构建目标的相对路径	            "bin/DebugWindowsx64/SakuraEngine/"
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.platform}" --路径变量
 
+-- 相对于解决方案的根目录 的头文件目录 的集合
+IncludeDir = {}
+IncludeDir["GLFW"] = "SakuraEngine/vendor/GLFW/include"
+
+include "SakuraEngine/vendor/GLFW" -- 引入 GLFW 目录中 premake5 中的 项目配置(project)
+
 project "SakuraEngine"       -- 项目文件(.vcxproj)
     location "SakuraEngine"  -- 项目文件的输出目录
     kind "SharedLib"         -- 项目类型(库)
@@ -38,7 +44,14 @@ project "SakuraEngine"       -- 项目文件(.vcxproj)
     includedirs     --定义头文件路径
     {
         "%{prj.name}/vendor/spdlog/include",
-        "SakuraEngine/src"
+        "SakuraEngine/src",
+        "%{IncludeDir.GLFW}"
+    }
+
+    links
+    {
+        "GLFW", -- 链接 GLFW
+        "opengl32.lib"
     }
 
     filter "system:windows"          --配置 Windows 系统
@@ -58,17 +71,21 @@ project "SakuraEngine"       -- 项目文件(.vcxproj)
              --将 dll 所在目录的文件拷贝到 exe 的目录
             "{COPYDIR} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox"
         }
+
         
     -- 根据配置细化设置
     filter "configurations:Debug" --调试
+        buildoptions { "/MDd" } -- 多线程调试 DLL（调试版）
         defines "SKR_DEBUG"
         symbols "on"    -- 生成调试符号
 
-    filter "configurations:Debug" --正式发行 
+    filter "configurations:Release" --正式发行 
+        buildoptions { "/MD" } -- 多线程 DLL（发布版）
         defines "SKR_RELEASE"
         optimize "On"  -- 开启优化
 
-    filter "configurations:Debug" --最终发行
+    filter "configurations:Dist" --最终发行
+        buildoptions { "/MD" } -- 多线程 DLL（发布版）
         defines "SKR_DIST"
         optimize "On"  -- 开启优化
 
@@ -115,10 +132,10 @@ project "Sandbox"
         defines "SKR_DEBUG"
         symbols "on"    
 
-    filter "configurations:Debug" 
+    filter "configurations:Release" 
         defines "SKR_RELEASE"
         optimize "On"
 
-    filter "configurations:Debug"
+    filter "configurations:Dist"
         defines "SKR_DIST"
         optimize "On"

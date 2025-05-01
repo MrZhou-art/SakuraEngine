@@ -8,15 +8,7 @@ extern Sakura::Application* Sakura::createApplication();
 //隐藏用户的主函数
 int main(int argc,char** argv)
 {
-
-	Sakura::Log::initLog();
-
-	SAKURA_CORE_INFO("success to initialize coreLogger!");
-	SAKURA_INFO("success to initialize clientLogger!");
-	SAKURA_CORE_WARN("Warning!");
-	SAKURA_CORE_TRACE("This is a trace!");
-	SAKURA_CORE_ERROR("Error!");
-	SAKURA_CORE_CRITICAL("Critical!");
+	Sakura::Log::initLog();// ***** 初始化日志 *****
 
 	auto app = Sakura::createApplication();
 	app->Run();

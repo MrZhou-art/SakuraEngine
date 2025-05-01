@@ -10,22 +10,22 @@ namespace Sakura
 	{
 	public:
 		WindowResizeEvent(int width, int height)
-			: mWidth(width), mHeight(height) {}
+			: m_Width(width), m_Height(height) {}
 
-		inline int getWidth() { return mWidth; }
-		inline int getHeight() { return mHeight; }
+		inline int GetWidth() { return m_Width; }
+		inline int GetHeight() { return m_Height; }
 
 		std::string ToString() const override
 		{
 			std::stringstream ss;
-			ss << "window's width is: " << mWidth << ",window's height is: " << mHeight;
+			ss << "window's width is: " << m_Width << ",window's height is: " << m_Height;
 			return ss.str();
 		}
 
 		EVENT_CLASS_CATEGORY(EVENTCATEGORY_INPUT | EVENTCATEGORY_APPLICATION)
 		EVENT_CLASS_TYPE(EventType::WindowResize)
 	private:
-		int mWidth, mHeight;
+		int m_Width, m_Height;
 	};
 
 	//窗口关闭事件

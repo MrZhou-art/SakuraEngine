@@ -40,6 +40,7 @@ namespace Sakura
 
 	class SAKURA_API Event
 	{
+		friend class EventDispatcher;//友元事件分发器,让其获取 m_Handled
 	public:
 		virtual EventType getEventType() const = 0;//获取事件类型
 		virtual const char* getName_C() const = 0;//获取char类型的事件名字
@@ -52,7 +53,7 @@ namespace Sakura
 		}
 
 	protected:
-		bool mHandled = false;//事件是否处于处理状态
+		bool m_Handled = false;//事件是否处于处理状态
 	};
 
 	//事件分发器(用于将事件动态分派给对应的处理函数)
@@ -65,7 +66,7 @@ namespace Sakura
 		* std::function 是 C++ 标准库提供的多态函数包装器，可存储、复制和调用 *** 任何可调用对象 *** 。
 		* bool(T&) 表示函数签名：接受一个 T& 类型的参数（事件引用），返回 bool 类型。
 		*/
-		template<typename T>
+		template<typename T>//模板参数代表包装函数参数类型
 		using EventFn = std::function<bool(T&)>;
 	public:
 		EventDispatcher(Event& event) 
@@ -79,10 +80,10 @@ namespace Sakura
 				/*
 				* 类型检查：比较当前事件的类型（mEvent.getEventType()）是否与模板参数 T 的静态类型（T::getStaticType()）一致。
 				* 类型转换：如果匹配成功，将 Event& 强制转换为 T&（ *** 安全的向下转型，因为类型已确认 *** ）。
-				* 执行处理函数：调用传入的处理函数 func，*** 并将处理结果（bool）存入 mEvent.mHandled *** 。
+				* 执行处理函数：调用传入的处理函数 func，*** 并将处理结果（bool）存入 mEvent.m_Handled *** 。
 				* 返回结果：返回 true 表示事件已被处理，否则返回 false。
 				*/
-				mEvent.mHandled = func(*(T*)&mEvent);
+				mEvent.m_Handled = func(*(T*)&mEvent);
 				return true;
 			}
 			return false;
