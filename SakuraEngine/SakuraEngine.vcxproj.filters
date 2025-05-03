@@ -37,6 +37,12 @@
     <ClInclude Include="src\Sakura\Events\MouseEvent.h">
       <Filter>Sakura\Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\Sakura\Layer.h">
+      <Filter>Sakura</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Sakura\LayerStack.h">
+      <Filter>Sakura</Filter>
+    </ClInclude>
     <ClInclude Include="src\Sakura\Log.h">
       <Filter>Sakura</Filter>
     </ClInclude>
@@ -47,6 +53,9 @@
       <Filter>Sakura</Filter>
     </ClInclude>
     <ClInclude Include="src\sakuraPCH.h" />
+    <ClInclude Include="src\Sakura\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.h" />
+    <ClInclude Include="vendor\imgui\backends\imgui_impl_opengl3_loader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
@@ -55,9 +64,17 @@
     <ClCompile Include="src\Sakura\Application.cpp">
       <Filter>Sakura</Filter>
     </ClCompile>
+    <ClCompile Include="src\Sakura\Layer.cpp">
+      <Filter>Sakura</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sakura\LayerStack.cpp">
+      <Filter>Sakura</Filter>
+    </ClCompile>
     <ClCompile Include="src\Sakura\Log.cpp">
       <Filter>Sakura</Filter>
     </ClCompile>
     <ClCompile Include="src\sakuraPCH.cpp" />
+    <ClCompile Include="src\Sakura\ImGui\ImGuiLayer.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.cpp" />
   </ItemGroup>
 </Project>

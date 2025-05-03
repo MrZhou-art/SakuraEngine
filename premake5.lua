@@ -21,8 +21,13 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.platform}" --路径变量
 -- 相对于解决方案的根目录 的头文件目录 的集合
 IncludeDir = {}
 IncludeDir["GLFW"] = "SakuraEngine/vendor/GLFW/include"
+IncludeDir["Glad"] = "SakuraEngine/vendor/Glad/include"
+IncludeDir["ImGui"] = "SakuraEngine/vendor/imgui"
 
-include "SakuraEngine/vendor/GLFW" -- 引入 GLFW 目录中 premake5 中的 项目配置(project)
+-- 引入目录中 premake5 中的 项目配置(project)
+include "SakuraEngine/vendor/GLFW" 
+include "SakuraEngine/vendor/Glad"
+include "SakuraEngine/vendor/ImGui"
 
 project "SakuraEngine"       -- 项目文件(.vcxproj)
     location "SakuraEngine"  -- 项目文件的输出目录
@@ -45,12 +50,16 @@ project "SakuraEngine"       -- 项目文件(.vcxproj)
     {
         "%{prj.name}/vendor/spdlog/include",
         "SakuraEngine/src",
-        "%{IncludeDir.GLFW}"
+        "%{IncludeDir.GLFW}",
+        "%{IncludeDir.Glad}",
+        "%{IncludeDir.ImGui}"
     }
 
-    links
+    links -- 链接 
     {
-        "GLFW", -- 链接 GLFW
+        "GLFW", 
+        "Glad",
+        "ImGui",
         "opengl32.lib"
     }
 
@@ -63,7 +72,8 @@ project "SakuraEngine"       -- 项目文件(.vcxproj)
         defines     --定义预处理宏
         {
             "SKR_PLATFORM_WINDOWS",
-            "SKR_BUILD_DLL"
+            "SKR_BUILD_DLL",
+            "GLFW_INCLUDE_NONE"
         }
 
         postbuildcommands    --后处理步骤
@@ -128,14 +138,18 @@ project "Sandbox"
             "SKR_PLATFORM_WINDOWS"
         }
         
-    filter "configurations:Debug"
+    -- 根据配置细化设置
+    filter "configurations:Debug" --调试
+        buildoptions { "/MDd" } -- 多线程调试 DLL（调试版）
         defines "SKR_DEBUG"
-        symbols "on"    
+        symbols "on"    -- 生成调试符号
 
-    filter "configurations:Release" 
+    filter "configurations:Release" --正式发行 
+        buildoptions { "/MD" } -- 多线程 DLL（发布版）
         defines "SKR_RELEASE"
-        optimize "On"
+        optimize "On"  -- 开启优化
 
-    filter "configurations:Dist"
+    filter "configurations:Dist" --最终发行
+        buildoptions { "/MD" } -- 多线程 DLL（发布版）
         defines "SKR_DIST"
-        optimize "On"
+        optimize "On"  -- 开启优化

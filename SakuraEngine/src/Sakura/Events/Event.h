@@ -13,7 +13,7 @@ namespace Sakura
 		None = 0,
 		WindowClose, WindowResize, WindowFocus, WindowMoved, 
 		AppTick, AppUpdata, AppRender,
-		KeyPressed, KeyReleased,
+		KeyPressed, KeyReleased,KeyTyped,
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 	};
 
@@ -32,24 +32,25 @@ namespace Sakura
 	//##（标记粘贴操作符）：将 EventType::与宏参数 type 连接成完整的枚举值
 	//#（字符串化操作符）: 将宏参数 type 转换为字符串字面量。
 	//其子类通过预处理器自动生成事件类的关键接口，减少重复代码.
-#define EVENT_CLASS_TYPE(type) static EventType getStaticType() { return type; }\
-								virtual EventType getEventType() const override { return getStaticType(); }\
-								virtual const char* getName_C() const override { return #type; }
+#define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return type; }\
+								virtual EventType GetEventType() const override { return GetStaticType(); }\
+								virtual const char* GetName_C() const override { return #type; }
 
-#define EVENT_CLASS_CATEGORY(category) virtual int getCategoryFlags() const override { return category; }
+#define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override { return category; }
 
 	class SAKURA_API Event
 	{
 		friend class EventDispatcher;//友元事件分发器,让其获取 m_Handled
 	public:
-		virtual EventType getEventType() const = 0;//获取事件类型
-		virtual const char* getName_C() const = 0;//获取char类型的事件名字
-		virtual int getCategoryFlags() const = 0;//获取当前事件种类掩码
-		virtual std::string ToString() const { return getName_C(); }//获取string类型的事件名字
+		virtual EventType GetEventType() const = 0;//获取事件类型
+		virtual const char* GetName_C() const = 0;//获取char类型的事件名字
+		virtual int GetCategoryFlags() const = 0;//获取当前事件种类掩码
+		virtual std::string ToString() const { return GetName_C(); }//获取string类型的事件名字
+		inline virtual bool GetHandled() const { return m_Handled; }//获取事件处理状态
 
-		inline bool isInCategory(EventCategory category)//判断实参是否是当前事件的种类
+		inline bool IsInCategory(EventCategory category)//判断实参是否是当前事件的种类
 		{
-			return getCategoryFlags() & category;
+			return GetCategoryFlags() & category;
 		}
 
 	protected:
@@ -70,26 +71,26 @@ namespace Sakura
 		using EventFn = std::function<bool(T&)>;
 	public:
 		EventDispatcher(Event& event) 
-			:mEvent(event){} //构造函数:接收一个事件对象
+			:m_Event(event){} //构造函数:接收一个事件对象
 		
 		template<typename T>
 		bool Dispatch(EventFn<T> func) //尝试将事件分派给特定类型的处理函数
 		{
-			if (mEvent.getEventType() == T::getStaticType()) //根据事件类型匹配结果，执行对应的处理函数并返回处理结果。
+			if (m_Event.GetEventType() == T::GetStaticType()) //根据事件类型匹配结果，执行对应的处理函数并返回处理结果。
 			{
 				/*
-				* 类型检查：比较当前事件的类型（mEvent.getEventType()）是否与模板参数 T 的静态类型（T::getStaticType()）一致。
+				* 类型检查：比较当前事件的类型（mEvent.GetEventType()）是否与模板参数 T 的静态类型（T::GetStaticType()）一致。
 				* 类型转换：如果匹配成功，将 Event& 强制转换为 T&（ *** 安全的向下转型，因为类型已确认 *** ）。
-				* 执行处理函数：调用传入的处理函数 func，*** 并将处理结果（bool）存入 mEvent.m_Handled *** 。
+				* 执行处理函数：调用传入的处理函数 func，*** 并将处理结果（bool）存入 m_Event.m_Handled *** 。
 				* 返回结果：返回 true 表示事件已被处理，否则返回 false。
 				*/
-				mEvent.m_Handled = func(*(T*)&mEvent);
+				m_Event.m_Handled = func(*(T*)&m_Event);
 				return true;
 			}
 			return false;
 		}
 	private:
-		Event& mEvent;
+		Event& m_Event;
 	};
 
 	/*

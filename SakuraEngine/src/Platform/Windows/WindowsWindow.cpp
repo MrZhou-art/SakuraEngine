@@ -39,7 +39,7 @@ namespace Sakura
 		SetVSync(true);
 
 		SAKURA_CORE_INFO("Creating window {0}({1},{2})",
-						m_Data.Title, m_Data.Width, m_Data.Height);
+			m_Data.Title, m_Data.Width, m_Data.Height);
 
 		// glfw 初始化
 		if (!s_GLFWInitialized)//如果 GLFW 未初始化
@@ -64,19 +64,26 @@ namespace Sakura
 			用途：在需要多个窗口复用 OpenGL 资源，避免重复创建、节省资源时，可设置共享窗口。
 				例如，一个应用有多个视图窗口展示相似内容，可让它们共享 OpenGL 资源。
 		*/
-		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);//创建窗口
-		glfwMakeContextCurrent(m_Window);//上下文
+		m_Window = glfwCreateWindow((int)m_Data.Width, (int)m_Data.Height, m_Data.Title.c_str(), nullptr, nullptr);//创建窗口
+		glfwMakeContextCurrent(m_Window);//生成当前窗口的上下文
+		/*
+		* 使用 glfwGetProcAddress 获取当前环境下的 OpenGL 函数的地址，
+		* 并通过 gladLoadGLLoader 将这些函数指针加载到程序中，
+		* 从而使得程序可以调用 OpenGL 提供的各种函数进行图形渲染等操作。
+		*/
+		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);//初始化 glad
+		SAKURA_CORE_ASSERT(status, "Failed to initialize Glad!");
 		glfwSetWindowUserPointer(m_Window, &m_Data);//将窗口与结构体关联,通过结构体中的变量设置窗口属性
 
 		// GLFW 回调函数
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)//窗口尺寸消息
 			{
-				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-				data.Width = width;
+				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);//获取窗口自定义指针(自定义窗口数据结构体)
+				data.Width = width;//将监听数据记录在数据中
 				data.Height = height;
 
-				WindowResizeEvent windowResize(width, height);
-				data.EventCallback(windowResize);
+				WindowResizeEvent windowResize(width, height);//将监听数据封装成事件
+				data.EventCallback(windowResize);//根据对应事件调用对应函数
 			});
 		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)//窗口关闭消息
 			{
@@ -110,6 +117,13 @@ namespace Sakura
 						break;
 					}
 				}
+			});
+		glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int codepoint)//获取字符
+			{
+				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+				KeyTypedEvent keyType(codepoint);
+				data.EventCallback(keyType);
 			});
 		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xpos, double ypos)//鼠标移动消息
 			{

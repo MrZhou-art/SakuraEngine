@@ -58,4 +58,22 @@ namespace Sakura
 		EVENT_CLASS_TYPE(EventType::KeyReleased)//生成 Type 有关的函数
 	private:
 	};
+
+	//键盘类型事件
+	class SAKURA_API KeyTypedEvent : public KeyEvent
+	{
+	public:
+		KeyTypedEvent(int keyCode)
+			: KeyEvent(keyCode) {}//有参构造器(设置键盘码值)
+
+		std::string ToString() const override//输出键盘消息
+		{
+			std::stringstream ss;
+			ss << "KeyTypedEvent: " << m_KeyCode << " is released";
+			return ss.str();
+		}
+
+		EVENT_CLASS_TYPE(EventType::KeyTyped)//生成 Type 有关的函数
+	private:
+	};
 }
