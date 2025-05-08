@@ -15,13 +15,21 @@
 
 //Sakura engine 支持 window x64 
 #ifdef SKR_PLATFORM_WINDOWS
-	#ifdef SKR_BUILD_DLL
-		#define SAKURA_API _declspec(dllexport)
+	#ifdef SKR_DYNAMIC_LINK
+		#ifdef SKR_BUILD_DLL
+			#define SAKURA_API _declspec(dllexport)
+		#else
+			#define SAKURA_API _declspec(dllimport)
+		#endif 
 	#else
-		#define SAKURA_API _declspec(dllimport)
-	#endif 
+	#define SAKURA_API
+	#endif
 #else
 	#error Sakura engine only supports windows
+#endif
+
+#ifdef SKR_DEBUG
+	#define SAKURA_ENABLE_ASSERTS
 #endif
 
 //实现断言

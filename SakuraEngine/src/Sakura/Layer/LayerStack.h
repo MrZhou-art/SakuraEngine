@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core.h"
+#include "Sakura/core.h"
 #include "Layer.h"
 
 namespace Sakura
@@ -21,6 +21,6 @@ namespace Sakura
 		inline std::vector<Layer*>::iterator end()		{ return m_Layers.end(); }	//获取栈底迭代器
 	private:
 		std::vector<Layer*> m_Layers;
-		std::vector<Layer*>::iterator m_LayerInsert;//迭代器,指向容器普通层顶部的元素
+		unsigned int m_LayerInsertIndex = 0;//迭代器,指向容器普通层顶部的元素
 	};
 }

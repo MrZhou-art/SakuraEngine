@@ -3,6 +3,7 @@
 workspace "SakuraEngine"      --解决方案(.sln)
     architecture "x64"  
     platforms { "x64" }
+    startproject "Sandbox"
     
     configurations   --构建配置
     {
@@ -23,6 +24,7 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "SakuraEngine/vendor/GLFW/include"
 IncludeDir["Glad"] = "SakuraEngine/vendor/Glad/include"
 IncludeDir["ImGui"] = "SakuraEngine/vendor/imgui"
+IncludeDir["glm"] = "SakuraEngine/vendor/glm"
 
 -- 引入目录中 premake5 中的 项目配置(project)
 include "SakuraEngine/vendor/GLFW" 
@@ -31,8 +33,9 @@ include "SakuraEngine/vendor/ImGui"
 
 project "SakuraEngine"       -- 项目文件(.vcxproj)
     location "SakuraEngine"  -- 项目文件的输出目录
-    kind "SharedLib"         -- 项目类型(库)
+    kind "StaticLib"         -- 项目类型(库)
     language "C++"           -- 编程语言
+    staticruntime "on"       -- 静态链接运行时库（如 MSVCRT)
 
     targetdir("bin/" .. outputdir .. "/%{prj.name}")  -- 输出目录
     objdir("bin_int/" .. outputdir .. "/%{prj.name}") -- 中间文件目录
@@ -42,8 +45,10 @@ project "SakuraEngine"       -- 项目文件(.vcxproj)
 
     files
     {
-        "%{prj.name}/src/**.h",  -- 递归包含所有 .h 文件
-        "%{prj.name}/src/**.cpp" -- 递归包含所有 .cpp 文件
+        "%{prj.name}/src/**.h",   -- 递归包含所有 .h 文件
+        "%{prj.name}/src/**.cpp", -- 递归包含所有 .cpp 文件
+        "%{prj.name}/vendor/glm/glm/**.hpp",
+        "%{prj.name}/vendor/glm/glm/**.inl"
     }
 
     includedirs     --定义头文件路径
@@ -52,7 +57,8 @@ project "SakuraEngine"       -- 项目文件(.vcxproj)
         "SakuraEngine/src",
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.Glad}",
-        "%{IncludeDir.ImGui}"
+        "%{IncludeDir.ImGui}",
+        "%{IncludeDir.glm}"
     }
 
     links -- 链接 
@@ -65,8 +71,8 @@ project "SakuraEngine"       -- 项目文件(.vcxproj)
 
     filter "system:windows"          --配置 Windows 系统
         cppdialect "C++17"           -- C++ 标准
-        staticruntime "on"           -- 静态链接运行时库（如 MSVCRT）
         systemversion "latest"       -- 使用最新SDK，启用最新API
+
         buildoptions { "/utf-8" }    -- 启用UTF-8源代码和执行字符集
             
         defines     --定义预处理宏
@@ -76,36 +82,40 @@ project "SakuraEngine"       -- 项目文件(.vcxproj)
             "GLFW_INCLUDE_NONE"
         }
 
-        postbuildcommands    --后处理步骤
-        {
-             --将 dll 所在目录的文件拷贝到 exe 的目录
-            "{COPYDIR} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox"
-        }
+        -- 动态库需要拷贝
+        -- postbuildcommands    --后处理步骤
+        -- {
+        --     -- 将 dll 所在目录的文件拷贝到 exe 的目录
+        --     -- 使用引号分割 DLL 输出目录与拷贝目录, *** 使用 / 明确表示Sandbox为目录 ***
+        --     "{COPYDIR} \"%{cfg.buildtarget.relpath}\" \"../bin/" .. outputdir .. "/Sandbox/\""
+        -- }
 
-        
     -- 根据配置细化设置
+    -- runtime 
+    --      在不同的构建模式下，程序运行时该如何连接和使用 C/C++ 运行库（CRT）,
+    --      如果未来要支持 Linux/macOS，runtime 选项能自动适配，而 /MD 是 Windows 特有的参数。
     filter "configurations:Debug" --调试
-        buildoptions { "/MDd" } -- 多线程调试 DLL（调试版）
+        runtime "Debug" -- 使用带调试信息的运行时库（方便断点调试）。
         defines "SKR_DEBUG"
         symbols "on"    -- 生成调试符号
 
     filter "configurations:Release" --正式发行 
-        buildoptions { "/MD" } -- 多线程 DLL（发布版）
+        runtime "Release" -- 使用优化过的运行时库（提高性能）
         defines "SKR_RELEASE"
         optimize "On"  -- 开启优化
 
     filter "configurations:Dist" --最终发行
-        buildoptions { "/MD" } -- 多线程 DLL（发布版）
+        runtime "Release"
         defines "SKR_DIST"
         optimize "On"  -- 开启优化
 
-    --filters {"system:windows", "configurations:Release"}
-    --    buildoptions "/MT" --静态发布库,使用多线程运行时库
+
 
 project "Sandbox"
     location "SakuraEngine"  
     kind "ConsoleApp"         
-    language "C++"           
+    language "C++"     
+    staticruntime "on"  
 
     targetdir("bin/" .. outputdir .. "/%{prj.name}")  
     objdir("bin_int/" .. outputdir .. "/%{prj.name}") 
@@ -119,7 +129,9 @@ project "Sandbox"
     includedirs     
     {
         "SakuraEngine/vendor/spdlog/include",
-        "SakuraEngine/src"
+        "SakuraEngine/src",
+        "SakuraEngine/vendor",
+        "%{IncludeDir.glm}"
     }
 
     links   --链接
@@ -129,8 +141,7 @@ project "Sandbox"
 
     filter "system:windows"     
         cppdialect "C++17"       
-        staticruntime "on"       
-        systemversion "latest"   
+        systemversion "latest" 
         buildoptions { "/utf-8" }  -- 启用UTF-8源代码和执行字符集
         
         defines 
@@ -140,16 +151,16 @@ project "Sandbox"
         
     -- 根据配置细化设置
     filter "configurations:Debug" --调试
-        buildoptions { "/MDd" } -- 多线程调试 DLL（调试版）
+        runtime "Debug"
         defines "SKR_DEBUG"
         symbols "on"    -- 生成调试符号
 
     filter "configurations:Release" --正式发行 
-        buildoptions { "/MD" } -- 多线程 DLL（发布版）
+        runtime "Release"
         defines "SKR_RELEASE"
         optimize "On"  -- 开启优化
 
     filter "configurations:Dist" --最终发行
-        buildoptions { "/MD" } -- 多线程 DLL（发布版）
+        runtime "Release"
         defines "SKR_DIST"
         optimize "On"  -- 开启优化

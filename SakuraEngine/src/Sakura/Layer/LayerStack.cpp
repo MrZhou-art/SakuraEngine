@@ -6,7 +6,6 @@ namespace Sakura
 {
 	LayerStack::LayerStack()
 	{
-		m_LayerInsert = m_Layers.begin();
 	}
 	LayerStack::~LayerStack()
 	{
@@ -18,7 +17,8 @@ namespace Sakura
 	{
 		//新图层会被插入到 m_LayerInsert 迭代器所指向的位置之前
 		//	因此，如果 m_LayerInsert 最初指向 layer1，那么插入 layer1 应该是这样的顺序：layer3, layer2, layer1。
-		m_Layers.emplace(m_LayerInsert, layer);
+		m_Layers.emplace(begin() + m_LayerInsertIndex, layer);
+		m_LayerInsertIndex++;
 	}
 	void LayerStack::PushOverLayer(Layer* overLayer)
 	{
@@ -42,7 +42,7 @@ namespace Sakura
 			*	所以，这前面的判断条件便仅仅为了确保所要删除的元素存在 vector 中
 			*	并不存在用 std::find 去寻找除栈顶以外的元素并将其删除的思路了。
 			*/
-			m_LayerInsert--;
+			m_LayerInsertIndex--;
 		}
 	}
 	void LayerStack::PopOverLayer(Layer* overLayer)

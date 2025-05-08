@@ -1,6 +1,6 @@
 #pragma once
 
-//这是一个预编译头文件的头文件
+// 这是一个预编译头文件的头文件
 
 #include <iostream>
 #include <sstream>
@@ -14,7 +14,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "Sakura/Log.h"
+#include "Sakura/Log/Log.h"
 
 #ifdef SKR_PLATFORM_WINDOWS
 	#include <Windows.h>

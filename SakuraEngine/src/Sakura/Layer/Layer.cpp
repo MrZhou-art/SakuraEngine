@@ -4,7 +4,7 @@
 
 namespace Sakura
 {
-	Layer::Layer(const std::string name)
+	Layer::Layer(const std::string& name)
 		:m_LayerName(name){}
 
 	Layer::~Layer()

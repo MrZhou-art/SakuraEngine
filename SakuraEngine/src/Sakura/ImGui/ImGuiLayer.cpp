@@ -2,11 +2,12 @@
 #include "ImGuiLayer.h"
 
 #include "imgui.h"
-#include "Platform/OpenGL/ImGuiOpenGLRenderer.h"
+
+#define IMGUI_IMPL_API
+#include "backends/imgui_impl_opengl3.h"
+#include "backends/imgui_impl_glfw.h"
+
 #include "Sakura/Application.h"
-//临时
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
 
 namespace Sakura
 {
@@ -16,155 +17,94 @@ namespace Sakura
 
 	void ImGuiLayer::OnAttach()
 	{
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();//初始化ImGui
-		ImGui::StyleColorsDark();//设置ImGui风格
+		// 初始化 Dear ImGui 上下文
+		IMGUI_CHECKVERSION();          // 检查 ImGui 版本兼容性（确保与当前后端匹配）
+		ImGui::CreateContext();        // 创建 ImGui 核心上下文（必须首先调用）
 
-        ImGuiIO& io = ImGui::GetIO();
-		io.ConfigFlags |= ImGuiBackendFlags_HasMouseCursors;   // 启用鼠标移动
-		io.ConfigFlags |= ImGuiBackendFlags_HasSetMousePos;    // 启用设置鼠标位置
+		ImGuiIO& io = ImGui::GetIO();  // 获取 ImGui 输入输出配置（键盘、鼠标、游戏手柄等）
+		(void)io;                      // 抑制 "未使用变量" 警告（若后续需要使用可移除）
 
-		//临时使用
-		io.KeyMap[ImGuiKey_Tab] = GLFW_KEY_TAB;
-		io.KeyMap[ImGuiKey_LeftArrow] = GLFW_KEY_LEFT;
-		io.KeyMap[ImGuiKey_RightArrow] = GLFW_KEY_RIGHT;
-		io.KeyMap[ImGuiKey_UpArrow] = GLFW_KEY_UP;
-		io.KeyMap[ImGuiKey_DownArrow] = GLFW_KEY_DOWN;
-		io.KeyMap[ImGuiKey_PageUp] = GLFW_KEY_PAGE_UP;
-		io.KeyMap[ImGuiKey_PageDown] = GLFW_KEY_PAGE_DOWN;
-		io.KeyMap[ImGuiKey_Home] = GLFW_KEY_HOME;
-		io.KeyMap[ImGuiKey_End] = GLFW_KEY_END;
-		io.KeyMap[ImGuiKey_Insert] = GLFW_KEY_INSERT;
-		io.KeyMap[ImGuiKey_Delete] = GLFW_KEY_DELETE;
-		io.KeyMap[ImGuiKey_Backspace] = GLFW_KEY_BACKSPACE;
-		io.KeyMap[ImGuiKey_Space] = GLFW_KEY_SPACE;
-		io.KeyMap[ImGuiKey_Enter] = GLFW_KEY_ENTER;
-		io.KeyMap[ImGuiKey_Escape] = GLFW_KEY_ESCAPE;
-		io.KeyMap[ImGuiKey_A] = GLFW_KEY_A;
-		io.KeyMap[ImGuiKey_C] = GLFW_KEY_C;
-		io.KeyMap[ImGuiKey_V] = GLFW_KEY_V;
-		io.KeyMap[ImGuiKey_X] = GLFW_KEY_X;
-		io.KeyMap[ImGuiKey_Y] = GLFW_KEY_Y;
-		io.KeyMap[ImGuiKey_Z] = GLFW_KEY_Z;
+		// 启用 ImGui 功能特性
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // 启用键盘导航（Tab/Shift+Tab 等切换焦点）
+		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // 启用游戏手柄导航（按需取消注释）
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // 启用窗口停靠布局（支持拖拽窗口合并/拆分）***
+		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // 启用多视口（支持独立于主窗口的弹出窗口）
+		//io.ConfigViewportsNoAutoMerge = true;                     // 禁用视口自动合并（高级配置，按需启用）
+		//io.ConfigViewportsNoTaskBarIcon = true;                   // 视口不显示在任务栏（适合工具窗口）
 
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // 启用键盘控制
-        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;      // 启用停靠功能
-        io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;    // 启用多视口/平台窗口
+		// 设置 ImGui 主题风格
+		ImGui::StyleColorsDark();        // 使用深色主题（ ImGui 内置主题：Dark/Light/Classic）
 
+		// 视口模式下的样式调整（使系统窗口与 ImGui 窗口外观一致）
+		ImGuiStyle& style = ImGui::GetStyle();  // 获取当前样式配置
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			style.WindowRounding = 0.0f;         // 取消窗口圆角（系统原生窗口通常无圆角）
+			style.Colors[ImGuiCol_WindowBg].w = 1.0f;  // 窗口背景完全不透明（避免与系统窗口混淆）
+		}
 
-        // 4. 配置后端
-        ImGui_ImplOpenGL3_Init("#version 460");
+		// 获取当前应用的窗口句柄（GLFW 窗口指针）
+		auto window = static_cast<GLFWwindow*>(Application::GetApplication().GetWindow().GetNativeWindow());
+
+		// 初始化 ImGui 平台及渲染后端
+		bool success = ImGui_ImplGlfw_InitForOpenGL(window, true);  // 初始化 GLFW 平台后端（第二个参数：是否安装 GLFW 输入回调）
+		success &= ImGui_ImplOpenGL3_Init("#version 460");       // 初始化 OpenGL 渲染后端（参数：GLSL 版本声明，与显卡支持匹配）
+		if (!success)
+		{
+			assert(false);
+		}
 	}
 
 	void ImGuiLayer::OnDetach()
 	{
-
+		//清理
+		ImGui_ImplOpenGL3_Shutdown();
+		ImGui_ImplGlfw_Shutdown();
+		ImGui::DestroyContext();
 	}
 
 	void ImGuiLayer::OnUpdata()
 	{
-		Application& app = Application::GetApplication();//获取应用层全局实例指针
-		ImGuiIO& io = ImGui::GetIO();//获取全局 ImGui 输入输出器
-		unsigned int width = app.GetWindow().GetWidth(), height = app.GetWindow().GetHeight();
-		io.DisplaySize = ImVec2(width, height);//更新 ImGui 窗口尺寸
+		
+	}
 
-		float time = (float)ImGui::GetTime();
-		io.DeltaTime = (m_Time > 0.0f) ? (time - m_Time) : (1.0f / 60.0f);//将时间记录在 ImGui 输入输出器
-		m_Time = time;
 
-		ImGui_ImplOpenGL3_NewFrame();//重置 OpenGL 相关状态（如顶点缓冲、索引缓冲等），确保每一帧的绘制不受上一帧残留状态的干扰
+	void ImGuiLayer::Begin()
+	{
+		assert(ImGui::GetCurrentContext() != nullptr);//检查 ImGui 上下文是否已创建
+		//初始化 OpenGL, Glfw 状态
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+	}
 
-		// 创建UI内容
-		ImGui::Begin("Hello, ImGui!");
-		ImGui::Text("This is a example of ImGui Window");
-		ImGui::Button("Button");
-		ImGui::End();
+	void ImGuiLayer::End()
+	{
+		// 设置 ImGui 的显示尺寸（与应用窗口大小同步）
+		ImGuiIO& io = ImGui::GetIO();
+		auto& app = Application::GetApplication();
+		io.DisplaySize = ImVec2{ (float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight() };  // 将 ImGui 的逻辑分辨率设置为应用窗口的物理尺寸
 
+		// 渲染阶段
+		ImGui::Render();  // 生成 ImGui 的绘制数据（顶点、索引、样式信息等）
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());  // 通过 OpenGL 后端渲染 ImGui 的绘制数据
+
+		// 更新并渲染额外的平台窗口（多视口支持）
+		// （平台相关函数可能会改变当前 OpenGL 上下文，因此我们保存/恢复上下文以便于代码移植。
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)  // 如果启用了多视口功能
+		{
+			GLFWwindow* backup_current_context = glfwGetCurrentContext();  // 保存当前 OpenGL 上下文（防止被平台窗口修改）
+			ImGui::UpdatePlatformWindows();  // 更新平台相关窗口（如独立于主窗口的弹出窗口）
+			ImGui::RenderPlatformWindowsDefault();  // 渲染平台窗口的外观（标题栏、边框等系统原生元素）
+			glfwMakeContextCurrent(backup_current_context);  // 恢复之前的 OpenGL 上下文（确保后续渲染使用正确的上下文）
+		}
+	}
+
+
+	void ImGuiLayer::OnImGuiRender()
+	{
+		//演示窗口
 		static bool show = true;
-		ImGui::ShowDemoWindow(&show);//展示窗口
-
-		ImGui::Render();//执行 ImGui 渲染
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-	}
-
-	void ImGuiLayer::OnEvent(Event& e)
-	{
-		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch<MouseButtonPressedEvent>(BIND_EVENT_FN(ImGuiLayer::OnMouseButtonPressedEvent));
-		dispatcher.Dispatch<MouseButtonReleasedEvent>(BIND_EVENT_FN(ImGuiLayer::OnMouseButtonReleasedEvent));
-		dispatcher.Dispatch<MouseMovedEvent>(BIND_EVENT_FN(ImGuiLayer::OnMouseMovedEvent));
-		dispatcher.Dispatch<MouseScrolledEvent>(BIND_EVENT_FN(ImGuiLayer::OnMouseScrolledEvent));
-		dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT_FN(ImGuiLayer::OnKeyPressedEvent));
-		dispatcher.Dispatch<KeyReleasedEvent>(BIND_EVENT_FN(ImGuiLayer::OnKeyReleasedEvent));
-		dispatcher.Dispatch<KeyTypedEvent>(BIND_EVENT_FN(ImGuiLayer::OnKeyTypedEvent));
-		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(ImGuiLayer::OnWindowResizeEvent));
-	}
-
-	bool ImGuiLayer::OnMouseButtonPressedEvent(MouseButtonPressedEvent& e)
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		io.MouseDown[e.GetMouseButton()] = true;
-
-		return false;
-	}
-	bool ImGuiLayer::OnMouseButtonReleasedEvent(MouseButtonReleasedEvent& e)
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		io.MouseDown[e.GetMouseButton()] = false;
-
-		return false;
-	}
-	bool ImGuiLayer::OnMouseMovedEvent(MouseMovedEvent& e)
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		io.MousePos = ImVec2(e.GetMouseX(), e.GetMouseY());
-
-		return false;
-	}
-	bool ImGuiLayer::OnMouseScrolledEvent(MouseScrolledEvent& e)
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		io.MouseWheel = e.GetXOffset();
-		io.MouseWheelH = e.GetYOffset();
-
-		return false;
-	}
-	bool ImGuiLayer::OnKeyPressedEvent(KeyPressedEvent& e)
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		io.KeysDown[e.GetKeyCode()] = true;
-
-		io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
-		io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
-		io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
-		io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];//windows cmd
-
-		return false;
-	}
-	bool ImGuiLayer::OnKeyReleasedEvent(KeyReleasedEvent& e)
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		io.KeysDown[e.GetKeyCode()] = false;
-
-		return false;
-	}
-	bool ImGuiLayer::OnKeyTypedEvent(KeyTypedEvent& e)
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		int keyCode = e.GetKeyCode();
-		if (keyCode > 0 && keyCode < 0x10000)
-			io.AddInputCharacter((unsigned short)keyCode);
-
-		return false;
-	}
-	bool ImGuiLayer::OnWindowResizeEvent(WindowResizeEvent& e)
-	{
-		ImGuiIO& io = ImGui::GetIO();
-		io.DisplaySize = ImVec2(e.GetWidth(), e.GetHeight());
-		io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);//帧缓冲区与显示区域的缩放
-		glViewport(0, 0, e.GetWidth(), e.GetHeight());
-
-		return false;
+		ImGui::ShowDemoWindow(&show);
 	}
 }

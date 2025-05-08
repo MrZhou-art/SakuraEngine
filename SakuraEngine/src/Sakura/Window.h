@@ -28,6 +28,8 @@ namespace Sakura
 		virtual ~Window() {}
 
 		virtual void OnUpdata() = 0;
+
+		virtual inline void* GetNativeWindow() const = 0;//返回空指针更加通用
 		
 		//窗口属性(长宽,事件回调,垂直同步)
 		virtual unsigned int GetWidth() const = 0;

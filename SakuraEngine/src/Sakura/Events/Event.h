@@ -8,7 +8,7 @@ namespace Sakura
 	//目前引擎中的事件是阻塞的,一旦接受消息,立刻处理
 	//未来可以使用事件缓冲区域
 
-	enum class EventType //枚举事件类型(强类型枚举:必须使用作用域前缀,不可隐式转换为整数，必须显式转换(static_cast))
+	enum class EventType // 枚举事件类型(强类型枚举:必须使用作用域前缀,不可隐式转换为整数，必须显式转换(static_cast))
 	{
 		None = 0,
 		WindowClose, WindowResize, WindowFocus, WindowMoved, 

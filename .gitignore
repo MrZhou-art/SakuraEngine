@@ -5,5 +5,24 @@ bin_int/
 
 # files
 *.user
-*.filters
+
+# Visual Studio 项目文件
 *.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.vcxproj.*.user
+*.sln
+*.suo
+*.opensdf
+*.sdf
+*.cache
+
+# 日志和临时文件
+*.log
+*.tlog
+*.obj
+*.tmp
+*.temp
+
+# 子模块目录（如果不想追踪子模块变更）
+vendor/**/.git

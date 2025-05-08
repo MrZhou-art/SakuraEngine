@@ -1,7 +1,9 @@
 #include "sakuraPCH.h"
-
-#include "Sakura/Log.h"
 #include "WindowsWindow.h"
+
+#include "Sakura/Log/Log.h"
+#include "Platform/OpenGL/OpenGLContext.h"
+
 #include "Sakura/Events/ApplicationEvent.h"
 #include "Sakura/Events/KeyEvent.h"
 #include "Sakura/Events/MouseEvent.h"
@@ -15,7 +17,7 @@ namespace Sakura
 		SAKURA_CORE_ERROR("GLFW Error ({0}): {1}", error_code, description);
 	}
 
-	Window* Window::Create(const WindowProps& props)//创建窗口
+	Window* Window::Create(const WindowProps& props)//创建窗口(根据不同平台使用不同窗口类)
 	{
 		return new WindowsWindow(props);
 	}
@@ -65,14 +67,12 @@ namespace Sakura
 				例如，一个应用有多个视图窗口展示相似内容，可让它们共享 OpenGL 资源。
 		*/
 		m_Window = glfwCreateWindow((int)m_Data.Width, (int)m_Data.Height, m_Data.Title.c_str(), nullptr, nullptr);//创建窗口
-		glfwMakeContextCurrent(m_Window);//生成当前窗口的上下文
-		/*
-		* 使用 glfwGetProcAddress 获取当前环境下的 OpenGL 函数的地址，
-		* 并通过 gladLoadGLLoader 将这些函数指针加载到程序中，
-		* 从而使得程序可以调用 OpenGL 提供的各种函数进行图形渲染等操作。
-		*/
-		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);//初始化 glad
-		SAKURA_CORE_ASSERT(status, "Failed to initialize Glad!");
+		//***
+
+		//根据不同 图形 API 使用不同上下文类
+		m_Context = new OpenGLContext(m_Window);
+		m_Context->Init();//初始化上下文
+		
 		glfwSetWindowUserPointer(m_Window, &m_Data);//将窗口与结构体关联,通过结构体中的变量设置窗口属性
 
 		// GLFW 回调函数
@@ -171,7 +171,7 @@ namespace Sakura
 	void WindowsWindow::OnUpdata()//窗口更新
 	{
 		glfwPollEvents();//从事件队列中取出事件，并调用对应的回调函数(非阻塞:函数不会等待新事件到来，处理完现有事件就立即返回)
-		glfwSwapBuffers(m_Window);//将后台缓冲区的内容显示到屏幕上。
+		m_Context->SwapBuffer();//双缓冲
 	}
 
 	void WindowsWindow::SetVSync(bool enabled) //设置垂直同步

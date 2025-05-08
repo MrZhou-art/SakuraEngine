@@ -7,3 +7,6 @@
 [submodule "SakuraEngine/vendor/imgui"]
 	path = SakuraEngine/vendor/imgui
 	url = https://github.com/TheCherno/imgui
+[submodule "SakuraEngine/vendor/glm"]
+	path = SakuraEngine/vendor/glm
+	url = https://github.com/g-truc/glm.git

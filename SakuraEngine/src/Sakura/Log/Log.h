@@ -15,7 +15,7 @@ namespace Sakura
 		inline static std::shared_ptr<spdlog::logger>& getClientLogger() { return mClientLogger; }//获取用户日志记录器
 
 	private:
-		//记录器
+		// 记录器
 		static std::shared_ptr<spdlog::logger> mCoreLogger;
 		static std::shared_ptr<spdlog::logger> mClientLogger;
 	};

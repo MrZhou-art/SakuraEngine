@@ -8,7 +8,7 @@ namespace Sakura
 	std::shared_ptr<spdlog::logger> Log::mCoreLogger = nullptr;
 	std::shared_ptr<spdlog::logger> Log::mClientLogger = nullptr;
 
-	void Log::initLog()//初始化日志
+	void Log::initLog()// 初始化日志
 	{
 		//设置日志输出格式(起始颜色范围,时间,记录器的名称,要记录的实际文本,结束颜色范围)
 		spdlog::set_pattern("%^[%T] %n %v%$");

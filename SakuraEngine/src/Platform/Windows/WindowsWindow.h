@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Sakura/Window.h"
+#include "Sakura/Renderer/Context.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -15,6 +16,8 @@ namespace Sakura
 
 		void OnUpdata() override;
 
+		virtual inline void* GetNativeWindow() const override { return m_Window; }//获取 GLFWwindow
+
 		//窗口属性
 		inline unsigned int GetWidth() const override { return m_Data.Width; }
 		inline unsigned int GetHeight() const override { return m_Data.Height; }
@@ -26,7 +29,8 @@ namespace Sakura
 		virtual void Init(const WindowProps& props);//初始化窗口
 		virtual void Shutdown();//清理窗口资源，释放分配的内存，关闭窗口。
 	private:
-		GLFWwindow* m_Window;//声明 GLFW 窗口指针,作为 GLFW 相关函数的作用目标
+		GLFWwindow* m_Window;//声明 GLFW 窗口指针,作为 GLFW 相关函数的参数
+		Context* m_Context;//声明 Context 上下文指针,调用不同的 图形 API 
  
 		struct WindowData //窗口属性
 		{
