@@ -1,4 +1,4 @@
-#include "sakuraPCH.h"
+ï»¿#include "sakuraPCH.h"
 #include "Platform/OpenGL/OpenGLBuffer.h"
 
 #include "glad/glad.h"
@@ -12,13 +12,13 @@ namespace Sakura
 
 	OpenGLVertexBuffer::OpenGLVertexBuffer(float* data, uint32_t size)
 	{
-		glCreateBuffers(1, &m_RendererID);							// Éú³É VBO
-		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);				// °ó¶¨ VBO
-		glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);	// ½« VBO ´«Èë GPU
+		glCreateBuffers(1, &m_RendererID);							// ç”Ÿæˆ VBO
+		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);				// ç»‘å®š VBO
+		glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);	// å°† VBO ä¼ å…¥ GPU
 	}
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	{
-		glDeleteBuffers(1, &m_RendererID);							// Ïú»Ù CPU ÖĞµÄ VBO
+		glDeleteBuffers(1, &m_RendererID);							// é”€æ¯ CPU ä¸­çš„ VBO
 	}
 
 	void OpenGLVertexBuffer::Bind() const
@@ -26,7 +26,7 @@ namespace Sakura
 		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 	}
 
-	void OpenGLVertexBuffer::UnBind() const
+	void OpenGLVertexBuffer::Unbind() const
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
@@ -51,7 +51,7 @@ namespace Sakura
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
 	}
-	void OpenGLIndexBuffer::UnBind() const
+	void OpenGLIndexBuffer::Unbind() const
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}

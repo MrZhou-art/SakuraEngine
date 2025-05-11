@@ -1,19 +1,23 @@
-#pragma once
+﻿#pragma once
 
-// ���ļ�����ƽ̨��Ϣ,���Ӧ����Ϣ,ͨ��ͷ�ļ���Ϣ
+// 此文件定义平台信息,库和应用信息,通用头文件信息
 /*
-* �淶:
-* 1.��������,������,�ṹ����,�ļ���ʹ�� ���շ�������
-* 2.���Ա���� m_Value,
-	�ṹ���Ա����ʹ�� ���շ�������,
-	�β�ʹ�� С�շ�������,
-	�ֲ���Ա����ʹ�� С�շ�������, 
-	��̬��Ա����s_Value
-* 3.�� THIS_IS_A_MACRO
-* 4.���ڶ������жϵ�ö�� THIS_IS_A_ENUM
+* 规范:
+* 1.函数名称,类名称,结构体名,文件名使用 大驼峰命名法
+* 2.类成员变量 m_Value,
+	结构体成员变量使用 大驼峰命名法,
+	形参使用 小驼峰命名法,
+	局部成员变量使用 小驼峰命名法, 
+	静态成员变量s_Value
+* 3.宏 THIS_IS_A_MACRO
+* 4.用于二进制判断的枚举 THIS_IS_A_ENUM
+* 5.类成员顺序: 
+*		公开函数 > 私有函数 > 公开变量 > 私有变量				
+*		构造函数 > 析构函数 > 成员函数 > 静态成员函数 > 成员变量 > 静态成员变量 
+* 6.结构体顺序: 成员变量 > 成员函数 > 静态成员函数
 */
 
-//Sakura engine ֧�� window x64 
+//Sakura engine 支持 window x64 
 #ifdef SKR_PLATFORM_WINDOWS
 	#ifdef SKR_DYNAMIC_LINK
 		#ifdef SKR_BUILD_DLL
@@ -32,18 +36,18 @@
 	#define SAKURA_ENABLE_ASSERTS
 #endif
 
-//ʵ�ֶ���
+//实现断言
 /*
-* __debugbreak() �Ǳ������ض��ĵ����ж�ָ�
-*	�� MSVC �е�ͬ�� DebugBreak()��
-*	�� GCC/Clang �п�ʹ�� __builtin_trap()��
+* __debugbreak() 是编译器特定的调试中断指令：
+*	在 MSVC 中等同于 DebugBreak()。
+*	在 GCC/Clang 中可使用 __builtin_trap()。
 * 
-*	   ��				����
-*	__FILE__		��ǰ�ļ������ַ�����
-*	__LINE__		��ǰ�кţ�������
-*	__FUNCTION__	��ǰ���������ַ�����
-*	__TIME__		����ʱ�䣨�ַ��� ��
-*	__DATE__		�������ڣ��ַ�����
+*	   宏				描述
+*	__FILE__		当前文件名（字符串）
+*	__LINE__		当前行号（整数）
+*	__FUNCTION__	当前函数名（字符串）
+*	__TIME__		编译时间（字符串 ）
+*	__DATE__		编译日期（字符串）
 */
 #ifdef SAKURA_ENABLE_ASSERTS
 	#define SAKURA_CORE_ASSERT(x,...) { if(!(x)){ \
@@ -55,18 +59,18 @@
 	#define SAKURA_ASSERT(x,...)	 
 #endif
 
-//������������
+//函数适配器宏
 	/* std::bind
-	* ��Ա��������󶨶���
-	*	�󶨳�Ա����ʱ�������ṩһ������ʵ����ͨ��ָ������ã�������ᵼ������ʱ����
-	* �������ݷ�ʽ��
-	*	����ֵ��std::bind Ĭ�ϻḴ�Ʋ�����ֵ��
-	*	�������ã�����Ҫ�������ã�ʹ�� std::ref �� std::cref��
+	* 成员函数必须绑定对象：
+	*	绑定成员函数时，必须提供一个对象实例（通过指针或引用），否则会导致运行时错误。
+	* 参数传递方式：
+	*	传递值：std::bind 默认会复制参数的值。
+	*	传递引用：若需要传递引用，使用 std::ref 或 std::cref。
 	*
-	*  std::function ���͵Ĳ�����������һ����ֱ�ӵ��õĶ��󣬶�����ԭʼ�ĳ�Ա����ָ��
-	*  std::bind ��Ϊ�����¼�ϵͳ�Ľӿڣ��� std::function����ȷ���ص�����ȷ���õ���Ա����
+	*  std::function 类型的参数期望的是一个可直接调用的对象，而不是原始的成员函数指针
+	*  std::bind 作为适配事件系统的接口（如 std::function），确保回调能正确调用到成员函数
 	*/
 #define BIND_EVENT_FN(func) std::bind(&func, this, std::placeholders::_1)
 
-//ʵ�ֶ������ж�
+//实现二进制判断
 #define BIT(x) ( 1 << x ) 

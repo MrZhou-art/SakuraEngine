@@ -1,44 +1,52 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Sakura/core.h"
-#include <spdlog/spdlog.h>// spdlog ¿â
-#include <spdlog/fmt/ostr.h>//Êä³öÁ÷²Ù×÷·û
+
+#pragma warning(push)			// ä¿å­˜å½“å‰è­¦å‘ŠçŠ¶æ€
+#pragma warning(disable: 6294)  //å¾ªç¯æ¡ä»¶é”™è¯¯
+#pragma warning(disable: 26495) //ç±»æˆå‘˜å˜é‡æœªåˆå§‹åŒ–
+#pragma warning(disable: 26498) //const å˜é‡æœªåˆå§‹åŒ–
+#pragma warning(disable: 26800) //åç¨‹ä¸­æŒ‡é’ˆç”Ÿå‘½å‘¨æœŸç®¡ç†ä¸å½“
+
+#include <spdlog/spdlog.h>		// spdlog åº“
+#include <spdlog/fmt/ostr.h>	//è¾“å‡ºæµæ“ä½œç¬¦
+#pragma warning(pop)			// æ¢å¤åŸå§‹è­¦å‘ŠçŠ¶æ€
 
 namespace Sakura
 {
 	class SAKURA_API Log
 	{
 	public:
-		static void initLog();//³õÊ¼»¯ÈÕÖ¾
+		static void initLog();//åˆå§‹åŒ–æ—¥å¿—
 
-		inline static std::shared_ptr<spdlog::logger>& getCoreLogger() { return mCoreLogger; }//»ñÈ¡¿ª·¢ÈÕÖ¾¼ÇÂ¼Æ÷
-		inline static std::shared_ptr<spdlog::logger>& getClientLogger() { return mClientLogger; }//»ñÈ¡ÓÃ»§ÈÕÖ¾¼ÇÂ¼Æ÷
+		inline static std::shared_ptr<spdlog::logger>& getCoreLogger() { return mCoreLogger; }//è·å–å¼€å‘æ—¥å¿—è®°å½•å™¨
+		inline static std::shared_ptr<spdlog::logger>& getClientLogger() { return mClientLogger; }//è·å–ç”¨æˆ·æ—¥å¿—è®°å½•å™¨
 
 	private:
-		// ¼ÇÂ¼Æ÷
+		// è®°å½•å™¨
 		static std::shared_ptr<spdlog::logger> mCoreLogger;
 		static std::shared_ptr<spdlog::logger> mClientLogger;
 	};
 }
 
 
-//ºê¶¨ÒåÈÕÖ¾ÀàĞÍ
+//å®å®šä¹‰æ—¥å¿—ç±»å‹
 /*
-*	SAKURA_CORE_ERROR	ºêÃû³Æ£¬×÷ÎªÈÕÖ¾µ÷ÓÃµÄ¼òĞ´¡£
-*	(...)				¿É±ä²ÎÊıÁĞ±í£¬ÔÊĞí´«ÈëÈÎÒâÊıÁ¿µÄ²ÎÊı¡£
-*	::					È«¾ÖÃüÃû¿Õ¼äÇ°×º£¬È·±£ÕÒµ½ÕıÈ·µÄ Sakura ÃüÃû¿Õ¼ä¡£(ÏÔÊ½²éÕÒÈ«¾Ö×÷ÓÃÓò,Ç¶Ì×ÃüÃû¿Õ¼ä»òÍ¬Ãû¾Ö²¿ÊµÌå)
-*	Sakura::Log			ÈÕÖ¾ÏµÍ³µÄÀà»òÃüÃû¿Õ¼ä¡£
-*	getCoreLogger()		¾²Ì¬·½·¨£¬·µ»ØºËĞÄÈÕÖ¾Æ÷µÄ¹²ÏíÖ¸Õë£¨Í¨³£ÊÇ spdlog::logger£©¡£
-*	->error(...)		µ÷ÓÃÈÕÖ¾Æ÷µÄ error ·½·¨£¬¼ÇÂ¼´íÎó¼¶±ğµÄÈÕÖ¾¡£
-*	__VA_ARGS__			Ô¤´¦ÀíÆ÷±£Áô±êÊ¶·û£¬´ú±íËùÓĞ´«ÈëµÄ¿É±ä²ÎÊı
+*	SAKURA_CORE_ERROR	å®åç§°ï¼Œä½œä¸ºæ—¥å¿—è°ƒç”¨çš„ç®€å†™ã€‚
+*	(...)				å¯å˜å‚æ•°åˆ—è¡¨ï¼Œå…è®¸ä¼ å…¥ä»»æ„æ•°é‡çš„å‚æ•°ã€‚
+*	::					å…¨å±€å‘½åç©ºé—´å‰ç¼€ï¼Œç¡®ä¿æ‰¾åˆ°æ­£ç¡®çš„ Sakura å‘½åç©ºé—´ã€‚(æ˜¾å¼æŸ¥æ‰¾å…¨å±€ä½œç”¨åŸŸ,åµŒå¥—å‘½åç©ºé—´æˆ–åŒåå±€éƒ¨å®ä½“)
+*	Sakura::Log			æ—¥å¿—ç³»ç»Ÿçš„ç±»æˆ–å‘½åç©ºé—´ã€‚
+*	getCoreLogger()		é™æ€æ–¹æ³•ï¼Œè¿”å›æ ¸å¿ƒæ—¥å¿—å™¨çš„å…±äº«æŒ‡é’ˆï¼ˆé€šå¸¸æ˜¯ spdlog::loggerï¼‰ã€‚
+*	->error(...)		è°ƒç”¨æ—¥å¿—å™¨çš„ error æ–¹æ³•ï¼Œè®°å½•é”™è¯¯çº§åˆ«çš„æ—¥å¿—ã€‚
+*	__VA_ARGS__			é¢„å¤„ç†å™¨ä¿ç•™æ ‡è¯†ç¬¦ï¼Œä»£è¡¨æ‰€æœ‰ä¼ å…¥çš„å¯å˜å‚æ•°
 */
-//¿ª·¢¶Ë
+//å¼€å‘ç«¯
 #define SAKURA_CORE_TRACE(...)		::Sakura::Log::getCoreLogger()->trace(__VA_ARGS__)
 #define SAKURA_CORE_INFO(...)		::Sakura::Log::getCoreLogger()->info(__VA_ARGS__)
 #define SAKURA_CORE_WARN(...)		::Sakura::Log::getCoreLogger()->warn(__VA_ARGS__)
 #define SAKURA_CORE_ERROR(...)		::Sakura::Log::getCoreLogger()->error(__VA_ARGS__)
 #define SAKURA_CORE_CRITICAL(...)	::Sakura::Log::getCoreLogger()->critical(__VA_ARGS__)
-//ÓÃ»§¶Ë
+//ç”¨æˆ·ç«¯
 #define SAKURA_TRACE(...)			::Sakura::Log::getClientLogger()->trace(__VA_ARGS__)
 #define SAKURA_INFO(...)			::Sakura::Log::getClientLogger()->info(__VA_ARGS__)
 #define SAKURA_WARN(...)			::Sakura::Log::getClientLogger()->warn(__VA_ARGS__)

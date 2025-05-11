@@ -1,6 +1,6 @@
-#include "sakuraPCH.h"
+ï»¿#include "sakuraPCH.h"
 
-//½ûÓÃÄ¬ÈÏ imgui ¼ÓÔØÆ÷(glad),Ê¹ÓÃ×Ô¶¨ÒåµÄ OpenGL º¯Êı¼ÓÔØÆ÷(glad)
+//ç¦ç”¨é»˜è®¤ imgui åŠ è½½å™¨(glad),ä½¿ç”¨è‡ªå®šä¹‰çš„ OpenGL å‡½æ•°åŠ è½½å™¨(glad)
 #define IMGUI_IMPL_OPENGL_LOADER_CUSTOM
 #include "backends/imgui_impl_opengl3.cpp"
 #include "backends/imgui_impl_glfw.cpp"

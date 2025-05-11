@@ -1,15 +1,15 @@
-#include "sakuraPCH.h"
+ï»¿#include "sakuraPCH.h"
 #include "WindowsInput.h"
 
 #include <GLFW/glfw3.h>
 
 namespace Sakura
 {
-	Input* Input::s_Instance = new WindowsInput();//ÏÈ±àÒë .h ÎÄ¼ş,µÃµ½ WindowsInput ¶¨Òå
+	Input* Input::s_Instance = new WindowsInput();//å…ˆç¼–è¯‘ .h æ–‡ä»¶,å¾—åˆ° WindowsInput å®šä¹‰
 
 	bool WindowsInput::IsKeyPressedImpl(int keyCode)
 	{
-		//1.»ñÈ¡ GLFWwindow 2.Ê¹ÓÃ glfw »Øµ÷º¯Êı 3.·µ»Ø½á¹û
+		//1.è·å– GLFWwindow 2.ä½¿ç”¨ glfw å›è°ƒå‡½æ•° 3.è¿”å›ç»“æœ
 		auto window = static_cast<GLFWwindow*>(Application::GetApplication().GetWindow().GetNativeWindow());
 		auto state = glfwGetKey(window, keyCode);
 

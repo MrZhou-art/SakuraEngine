@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Sakura/core.h"
 #include "Layer.h"
@@ -11,16 +11,16 @@ namespace Sakura
 		LayerStack();
 		~LayerStack();
 
-		//ÆÕÍ¨²ãÓÉµü´úÆ÷Î¬»¤,¸²¸Ç²ã×÷ÎªÕ»Ê¹ÓÃ
+		//æ™®é€šå±‚ç”±è¿­ä»£å™¨ç»´æŠ¤,è¦†ç›–å±‚ä½œä¸ºæ ˆä½¿ç”¨
 		void PushLayer(Layer* layer);
 		void PushOverLayer(Layer* overLayer);
 		void PopLayer(Layer* layer);
 		void PopOverLayer(Layer* overLayer);
 
-		inline std::vector<Layer*>::iterator begin()	{ return m_Layers.begin(); }//»ñÈ¡Õ»¶¥µü´úÆ÷(×÷Îª½Ó¿Ú,ÔÚ for Ñ­»·ÖĞÊ¹ÓÃ)
-		inline std::vector<Layer*>::iterator end()		{ return m_Layers.end(); }	//»ñÈ¡Õ»µ×µü´úÆ÷
+		inline std::vector<Layer*>::iterator begin()	{ return m_Layers.begin(); }//è·å–æ ˆé¡¶è¿­ä»£å™¨(ä½œä¸ºæ¥å£,åœ¨ for å¾ªç¯ä¸­ä½¿ç”¨)
+		inline std::vector<Layer*>::iterator end()		{ return m_Layers.end(); }	//è·å–æ ˆåº•è¿­ä»£å™¨
 	private:
 		std::vector<Layer*> m_Layers;
-		unsigned int m_LayerInsertIndex = 0;//µü´úÆ÷,Ö¸ÏòÈİÆ÷ÆÕÍ¨²ã¶¥²¿µÄÔªËØ
+		unsigned int m_LayerInsertIndex = 0;//è¿­ä»£å™¨,æŒ‡å‘å®¹å™¨æ™®é€šå±‚é¡¶éƒ¨çš„å…ƒç´ 
 	};
 }

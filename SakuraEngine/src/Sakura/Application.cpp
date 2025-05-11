@@ -1,66 +1,109 @@
-#include "sakuraPCH.h"
+ï»¿#include "sakuraPCH.h"
 #include "Application.h"
-
-#include "Sakura/Input/Input.h"
 
 #include "Platform/OpenGL/OpenGLBuffer.h"
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include "Sakura/Renderer/RendererCommand.h"
 
 namespace Sakura
 {
-	Application* Application::s_Instance = nullptr;//È«¾ÖÎ¨Ò»ÊµÀıÖ¸Õë
-	//inline Application& Application::GetApplication() { return *s_Instance; }//»ñÈ¡È«¾ÖÎ¨Ò»ÊµÀıÖ¸Õë
-	
+	Application* Application::s_Instance = nullptr;//å…¨å±€å”¯ä¸€å®ä¾‹æŒ‡é’ˆ
+	//inline Application& Application::GetApplication() { return *s_Instance; }//è·å–å…¨å±€å”¯ä¸€å®ä¾‹æŒ‡é’ˆ
+
 	Application::Application()
 	{
+		// ------------ çª—å£å‡†å¤‡ --------------
 		SAKURA_CORE_ASSERT(!s_Instance, "Application already exists!");
-		Application::s_Instance = this;//³õÊ¼»¯È«¾ÖÎ¨Ò»ÊµÀıÖ¸Õë
+		Application::s_Instance = this;//åˆå§‹åŒ–å…¨å±€å”¯ä¸€å®ä¾‹æŒ‡é’ˆ
 
-		// ´íÎó£ºm_Window = std::make_unique<Window>(*(Window::Create()));
-		// Í¨¹ı¹¤³§·½·¨·µ»ØµÄÖ¸Õë´´½¨ unique_ptr
-		m_Window = std::unique_ptr<Window>(Window::Create());//¸¸ÀàÀàĞÍÖ¸Õë Window Ö¸ÕëÖ¸Ïò×ÓÀà¶ÔÏó WidnowsWindow
-		m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));//³õÊ¼»¯ m_Data ÖĞµÄ eventCallback(Ö¸¶¨ÊÂ¼ş´¦Àíº¯Êı)
+		m_Window = std::unique_ptr<Window>(Window::Create());//çˆ¶ç±»ç±»å‹æŒ‡é’ˆ Window æŒ‡é’ˆæŒ‡å‘å­ç±»å¯¹è±¡ WidnowsWindow
+		m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));//åˆå§‹åŒ– m_Data ä¸­çš„ eventCallback(æŒ‡å®šäº‹ä»¶å¤„ç†å‡½æ•°)
 
-		// ImGui Í¼²ã
+		// ------------ ImGui å›¾å±‚ --------------
 		m_ImGuiLayer = new ImGuiLayer();
-		PushOverLayer(m_ImGuiLayer);//½« ImGui Ñ¹ÈëÕ»ÖĞ
+		PushOverLayer(m_ImGuiLayer);//å°† ImGui å‹å…¥æ ˆä¸­
 
-		// OpenGL ×¼±¸
-		//Vao
-		glGenVertexArrays(1, &m_VertexArray);
-		glBindVertexArray(m_VertexArray);
+		// ------------ æ¸²æŸ“å‡†å¤‡ --------------
+		// ************** ä¸‰è§’å½¢ ********************
+		m_VertexArray.reset(VertexArray::Create()); // é¡¶ç‚¹æè¿°å¯¹è±¡
+		std::shared_ptr<VertexBuffer>	m_VertexBuffer;
+		std::shared_ptr<IndexBuffer>	m_IndexBuffer;
 
-		//¶¥µã
-		float position[3 * 3] =
+		// é¡¶ç‚¹ä¿¡æ¯
+		float vertices[3 * 7] =
 		{
-			-0.5f, -0.5f,  0.0f,
-			 0.5f, -0.5f,  0.0f,
-			 0.0f,  0.5f,  0.0f
+			-0.5f, -0.5f,  0.0f, 1.0f,  0.0f,  0.0f,  0.0f,
+			 0.5f, -0.5f,  0.0f, 0.0f,  1.0f,  0.0f,  0.0f,
+			 0.0f,  0.5f,  0.0f, 0.0f,  0.0f,  1.0f,  0.0f
 		};
 
-		m_VertexBuffer.reset(VertexBuffer::Create(position,sizeof(position)));
+		m_VertexBuffer.reset(VertexBuffer::Create(vertices,sizeof(vertices))); // åˆ›å»ºé¡¶ç‚¹ç¼“å†²,å°†é¡¶ç‚¹æ•°æ®è¾“å…¥ GPU
 
-		//Ê¹ÓÃ vao ¼ÇÂ¼ vbo Êı¾İ
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+		BufferLayout layout = // é¡¶ç‚¹ç¼“å†²å¸ƒå±€
+		{
+			{ShaderDataType::Float3, "a_Position"},
+			{ShaderDataType::Float4, "a_Color"}
+		};
 
-		//Ë÷Òı
+		m_VertexBuffer->SetLayout(layout);				//å°†é¡¶ç‚¹ç¼“å†²å¸ƒå±€è®¾ç½®ç»™é¡¶ç‚¹ç¼“å†²
+		m_VertexArray->AddVertexBuffer(m_VertexBuffer);	//æ ¹æ®å¸ƒå±€ç”Ÿæˆç¼“å†²æè¿°
+
+		// ç´¢å¼•
 		uint32_t indices[3] =
 		{
 			0, 1, 2
 		};
 
-		m_IndexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices)/sizeof(uint32_t)));
+		m_IndexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices)/sizeof(uint32_t))); // åˆ›å»ºç´¢å¼•ç¼“å†²,å°†é¡¶ç‚¹ç´¢å¼•è¾“å…¥ GPU
+		m_VertexArray->SetIndexBuffer(m_IndexBuffer); // é¡¶ç‚¹ç¼“å†²å¸ƒå±€
 
+		// **************** Square ***************
+		m_SquareVA.reset(VertexArray::Create()); // é¡¶ç‚¹æè¿°å¯¹è±¡
+		std::shared_ptr<VertexBuffer>	squareVB;
+		std::shared_ptr<IndexBuffer>	squareIB;
+
+		// é¡¶ç‚¹ä¿¡æ¯
+		float Squareverteices[4 * 3] =
+		{
+			-0.5f, -0.5f,  0.0f, 
+			 0.5f, -0.5f,  0.0f, 
+			 0.5f,  0.5f,  0.0f, 
+			-0.5f,  0.5f,  0.0f
+		};
+
+		squareVB.reset(VertexBuffer::Create(Squareverteices, sizeof(Squareverteices))); // åˆ›å»ºé¡¶ç‚¹ç¼“å†²,å°†é¡¶ç‚¹æ•°æ®è¾“å…¥ GPU
+
+		BufferLayout Squarelayout = // é¡¶ç‚¹ç¼“å†²å¸ƒå±€
+		{
+			{ShaderDataType::Float3, "a_Position"}
+		};
+
+		squareVB->SetLayout(Squarelayout);				//å°†é¡¶ç‚¹ç¼“å†²å¸ƒå±€è®¾ç½®ç»™é¡¶ç‚¹ç¼“å†²
+		m_SquareVA->AddVertexBuffer(squareVB);			//æ ¹æ®å¸ƒå±€ç”Ÿæˆç¼“å†²æè¿°
+
+		// ç´¢å¼•
+		uint32_t squareIndices[2 * 3] =
+		{
+			0, 1, 2, 
+			2, 3, 0
+		};
+
+		squareIB.reset(IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t))); // åˆ›å»ºç´¢å¼•ç¼“å†²,å°†é¡¶ç‚¹ç´¢å¼•è¾“å…¥ GPU
+		m_SquareVA->SetIndexBuffer(squareIB); // é¡¶ç‚¹ç¼“å†²å¸ƒå±€
+
+
+		// ************************** Shader ************************
 		std::string vertexSrc = R"(
 			#version 460
-			layout(location = 0) in vec3 pos;
-			
+			layout(location = 0) in vec3 a_Pos;
+			layout(location = 1) in vec4 a_Color;
+
+			out vec4 v_Color;			
+
 			void main()
 			{
-				gl_Position = vec4(pos, 1.0);
+				v_Color = a_Color;
+				gl_Position = vec4(a_Pos, 1.0);
 			}
 		)";
 
@@ -68,13 +111,43 @@ namespace Sakura
 			#version 460
 			layout(location = 0) out vec4 color;
 			
+			in vec4 v_Color;
+
 			void main()
 			{
-				color = vec4(0.6, 0.5, 0.4, 1.0);
+				color = v_Color;
 			}
 		)";
 
 		m_Shader.reset(new Shader(vertexSrc, fragmentSrc));
+		
+		// ************* SquareShader *************
+		std::string SquarevertexSrc = R"(
+			#version 460
+			layout(location = 0) in vec3 a_Pos;
+
+			out vec3 v_Pos;			
+
+			void main()
+			{
+				v_Pos = a_Pos;
+				gl_Position = vec4(a_Pos, 1.0);
+			}
+		)";
+
+		std::string SquarefragmentSrc = R"(
+			#version 460
+			layout(location = 0) out vec4 color;
+
+			in vec3 v_Pos;
+
+			void main()
+			{
+				color = vec4(v_Pos * 0.5 + 0.5,1.0);
+			}
+		)";
+
+		m_SquareShader.reset(new Shader(SquarevertexSrc, SquarefragmentSrc));
 	}
 	Application::~Application()
 	{
@@ -86,37 +159,42 @@ namespace Sakura
 
 		while (m_Running)
 		{
-			glClearColor(0.192f, 0.192f, 0.192f, 1.00f);//ÇåÀí»­ÃæÑÕÉ«
-			glClear(GL_COLOR_BUFFER_BIT);
+			RendererCommand::SetClearColor({ 0.192f, 0.192f, 0.192f, 1.00f });
+			RendererCommand::Clear();
+
+			Renderer::SceneBegin();
+
+			m_SquareShader->Bind();
+			Renderer::Submit(m_SquareVA);
 
 			m_Shader->Bind();
-			glBindVertexArray(m_VertexArray);
-			glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
-			m_Shader->UnBind();
+			Renderer::Submit(m_VertexArray);
 
-			for (Layer* layer : m_LayerStack)//Í¼²ãÂß¼­
+			Renderer::SceneEnd();
+
+			for (Layer* layer : m_LayerStack)//å›¾å±‚é€»è¾‘
 				layer->OnUpdata();
 
 			m_ImGuiLayer->Begin();
-			for (Layer* layer : m_LayerStack)//Í¼²ãäÖÈ¾
+			for (Layer* layer : m_LayerStack)//å›¾å±‚æ¸²æŸ“
 				layer->OnImGuiRender();
 			m_ImGuiLayer->End();
 
-			m_Window->OnUpdata();//ÏûÏ¢½ÓÊÜÆ÷,ÇĞ»»Ë«»º´æ
+			m_Window->OnUpdata();//æ¶ˆæ¯æ¥å—å™¨,åˆ‡æ¢åŒç¼“å­˜
 		}
 	}
 
 
 
-	void Application::OnEvent(Event& e)//ÊÂ¼ş´¦Àí
+	void Application::OnEvent(Event& e)	//äº‹ä»¶å¤„ç†
 	{
-		EventDispatcher dispatcher(e);//Íâ´°¿ÚÊÂ¼ş·Ö·¢Æ÷
+		EventDispatcher dispatcher(e);	//å¤–çª—å£äº‹ä»¶åˆ†å‘å™¨
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowClose));
 
-		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();)
+		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();)// ä»ä¸Šä¸‹æ¸²æŸ“å›¾å±‚
 		{
-			(*(--it))->OnEvent(e);//Ö´ĞĞÍ¼²ãÖĞµÄÊÂ¼ş
-			if (e.GetHandled())//Èç¹ûÔÚÄ³¸öÍ¼²ãÖĞÊÂ¼ş´¦ÀíÍê³É,ÔòÖ±½ÓÌø³ö for Ñ­»·
+			(*(--it))->OnEvent(e);	// æ‰§è¡Œå›¾å±‚ä¸­çš„äº‹ä»¶
+			if (e.GetHandled())		// å¦‚æœåœ¨æŸä¸ªå›¾å±‚ä¸­äº‹ä»¶å¤„ç†å®Œæˆ,åˆ™ç›´æ¥è·³å‡º for å¾ªç¯
 				break;
 		}
 	}
@@ -124,7 +202,7 @@ namespace Sakura
 	void Application::PushLayer(Layer* layer)
 	{
 		m_LayerStack.PushLayer(layer);
-		layer->OnAttach();//³õÊ¼»¯ ImGui
+		layer->OnAttach();//åˆå§‹åŒ– ImGui
 	}
 	void Application::PushOverLayer(Layer* overLayer)
 	{
@@ -135,7 +213,7 @@ namespace Sakura
 
 	bool Application::OnWindowClose(WindowCloseEvent& e)
 	{
-		m_Running = false;//ÖÕÖ¹Ñ­»·
+		m_Running = false;//ç»ˆæ­¢å¾ªç¯
 		return true;
 	}
 }

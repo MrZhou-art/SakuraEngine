@@ -1,4 +1,4 @@
-#include "sakuraPCH.h"
+ï»¿#include "sakuraPCH.h"
 #include "WindowsWindow.h"
 
 #include "Sakura/Log/Log.h"
@@ -10,31 +10,31 @@
 
 namespace Sakura
 {
-	static bool s_GLFWInitialized = false;//¼ÇÂ¼ glfw ÊÇ·ñ³õÊ¼»¯(¶à´°¿ÚÊ±ÎŞĞèÖØ¸´³õÊ¼»¯)
+	static bool s_GLFWInitialized = false;//è®°å½• glfw æ˜¯å¦åˆå§‹åŒ–(å¤šçª—å£æ—¶æ— éœ€é‡å¤åˆå§‹åŒ–)
 
-	static void GLFWErrorCallback(int error_code, const char* description)//¼ÇÂ¼´íÎó
+	static void GLFWErrorCallback(int error_code, const char* description)//è®°å½•é”™è¯¯
 	{
 		SAKURA_CORE_ERROR("GLFW Error ({0}): {1}", error_code, description);
 	}
 
-	Window* Window::Create(const WindowProps& props)//´´½¨´°¿Ú(¸ù¾İ²»Í¬Æ½Ì¨Ê¹ÓÃ²»Í¬´°¿ÚÀà)
+	Window* Window::Create(const WindowProps& props)//åˆ›å»ºçª—å£(æ ¹æ®ä¸åŒå¹³å°ä½¿ç”¨ä¸åŒçª—å£ç±»)
 	{
 		return new WindowsWindow(props);
 	}
 
-	WindowsWindow::WindowsWindow(const WindowProps& props)//¹¹Ôì
+	WindowsWindow::WindowsWindow(const WindowProps& props)//æ„é€ 
 	{
 		Init(props);
 	}
 
-	WindowsWindow::~WindowsWindow()//Îö¹¹
+	WindowsWindow::~WindowsWindow()//ææ„
 	{
 		Shutdown();
 	}
 
-	void WindowsWindow::Init(const WindowProps& props)//´°¿Ú³õÊ¼»¯
+	void WindowsWindow::Init(const WindowProps& props)//çª—å£åˆå§‹åŒ–
 	{
-		//´°¿ÚÊôĞÔ³õÊ¼»¯
+		//çª—å£å±æ€§åˆå§‹åŒ–
 		m_Data.Title = props.Title;
 		m_Data.Width = props.Width;
 		m_Data.Height = props.Height;
@@ -43,60 +43,60 @@ namespace Sakura
 		SAKURA_CORE_INFO("Creating window {0}({1},{2})",
 			m_Data.Title, m_Data.Width, m_Data.Height);
 
-		// glfw ³õÊ¼»¯
-		if (!s_GLFWInitialized)//Èç¹û GLFW Î´³õÊ¼»¯
+		// glfw åˆå§‹åŒ–
+		if (!s_GLFWInitialized)//å¦‚æœ GLFW æœªåˆå§‹åŒ–
 		{
 			//TODO : glfwTerminate on system shutdown
 			int success = glfwInit();
 			SAKURA_CORE_ASSERT(success, "Could not initialize GLFW!");
-			glfwSetErrorCallback(GLFWErrorCallback);//´íÎó»Øµ÷º¯Êı
+			glfwSetErrorCallback(GLFWErrorCallback);//é”™è¯¯å›è°ƒå‡½æ•°
 			s_GLFWInitialized = true;
 		}
 
 		//glfwCreateWindow
 		/*
-		GLFWmonitor* monitor £º
-			º¬Òå£ºÓÃÓÚÖ¸¶¨´°¿Ú´´½¨Ê±Ê¹ÓÃµÄÏÔÊ¾Æ÷£¨¼àÊÓÆ÷£© ¡£Èç¹û´«Èë NULL£¬´°¿Ú½«´´½¨ÔÚÏµÍ³Ä¬ÈÏÏÔÊ¾Æ÷ÉÏ£»
-				Èô´«ÈëÖ¸Ïò GLFWmonitor ½á¹¹ÌåµÄÓĞĞ§Ö¸Õë£¬´°¿Ú»á´´½¨ÔÚ¶ÔÓ¦µÄÏÔÊ¾Æ÷ÉÏ¡£ÕâÔÚ¶àÏÔÊ¾Æ÷»·¾³ÏÂºÜÓĞÓÃ£¬¿ÉÖ¸¶¨´°¿ÚÏÔÊ¾ÔÚÌØ¶¨ÏÔÊ¾Æ÷¡£
-			ÓÃÍ¾£º±ÈÈçÏëÈÃÓ¦ÓÃ³ÌĞò´°¿Ú¹Ì¶¨ÏÔÊ¾ÔÚ¸±ÆÁ£¬¾Í¿ÉÒÔ»ñÈ¡¸±ÆÁµÄ GLFWmonitor Ö¸Õë´«Èë´Ë²ÎÊı¡£
-				»ñÈ¡ÏÔÊ¾Æ÷Ïà¹ØĞÅÏ¢¿ÉÍ¨¹ı glfwGetMonitors µÈº¯Êı¡£
-		GLFWwindow* share £º
-			º¬Òå£º±íÊ¾Óë¸Ã´°¿Ú¹²Ïí×ÊÔ´µÄÁíÒ»¸ö´°¿Ú ¡£Èç¹û´«Èë NULL£¬ÔòĞÂ´´½¨µÄ´°¿Ú²»ÓëÆäËû´°¿Ú¹²Ïí×ÊÔ´£»
-				Èô´«ÈëÓĞĞ§µÄ GLFWwindow Ö¸Õë£¬ĞÂ´°¿ÚµÄÉÏÏÂÎÄ£¨Èç OpenGL Ïà¹Ø×ÊÔ´£¬ÏñÎÆÀí¡¢×ÅÉ«Æ÷³ÌĞòµÈ£©»áÓëÖ¸¶¨´°¿Ú¹²Ïí¡£
-			ÓÃÍ¾£ºÔÚĞèÒª¶à¸ö´°¿Ú¸´ÓÃ OpenGL ×ÊÔ´£¬±ÜÃâÖØ¸´´´½¨¡¢½ÚÊ¡×ÊÔ´Ê±£¬¿ÉÉèÖÃ¹²Ïí´°¿Ú¡£
-				ÀıÈç£¬Ò»¸öÓ¦ÓÃÓĞ¶à¸öÊÓÍ¼´°¿ÚÕ¹Ê¾ÏàËÆÄÚÈİ£¬¿ÉÈÃËüÃÇ¹²Ïí OpenGL ×ÊÔ´¡£
+		GLFWmonitor* monitor ï¼š
+			å«ä¹‰ï¼šç”¨äºæŒ‡å®šçª—å£åˆ›å»ºæ—¶ä½¿ç”¨çš„æ˜¾ç¤ºå™¨ï¼ˆç›‘è§†å™¨ï¼‰ ã€‚å¦‚æœä¼ å…¥ NULLï¼Œçª—å£å°†åˆ›å»ºåœ¨ç³»ç»Ÿé»˜è®¤æ˜¾ç¤ºå™¨ä¸Šï¼›
+				è‹¥ä¼ å…¥æŒ‡å‘ GLFWmonitor ç»“æ„ä½“çš„æœ‰æ•ˆæŒ‡é’ˆï¼Œçª—å£ä¼šåˆ›å»ºåœ¨å¯¹åº”çš„æ˜¾ç¤ºå™¨ä¸Šã€‚è¿™åœ¨å¤šæ˜¾ç¤ºå™¨ç¯å¢ƒä¸‹å¾ˆæœ‰ç”¨ï¼Œå¯æŒ‡å®šçª—å£æ˜¾ç¤ºåœ¨ç‰¹å®šæ˜¾ç¤ºå™¨ã€‚
+			ç”¨é€”ï¼šæ¯”å¦‚æƒ³è®©åº”ç”¨ç¨‹åºçª—å£å›ºå®šæ˜¾ç¤ºåœ¨å‰¯å±ï¼Œå°±å¯ä»¥è·å–å‰¯å±çš„ GLFWmonitor æŒ‡é’ˆä¼ å…¥æ­¤å‚æ•°ã€‚
+				è·å–æ˜¾ç¤ºå™¨ç›¸å…³ä¿¡æ¯å¯é€šè¿‡ glfwGetMonitors ç­‰å‡½æ•°ã€‚
+		GLFWwindow* share ï¼š
+			å«ä¹‰ï¼šè¡¨ç¤ºä¸è¯¥çª—å£å…±äº«èµ„æºçš„å¦ä¸€ä¸ªçª—å£ ã€‚å¦‚æœä¼ å…¥ NULLï¼Œåˆ™æ–°åˆ›å»ºçš„çª—å£ä¸ä¸å…¶ä»–çª—å£å…±äº«èµ„æºï¼›
+				è‹¥ä¼ å…¥æœ‰æ•ˆçš„ GLFWwindow æŒ‡é’ˆï¼Œæ–°çª—å£çš„ä¸Šä¸‹æ–‡ï¼ˆå¦‚ OpenGL ç›¸å…³èµ„æºï¼Œåƒçº¹ç†ã€ç€è‰²å™¨ç¨‹åºç­‰ï¼‰ä¼šä¸æŒ‡å®šçª—å£å…±äº«ã€‚
+			ç”¨é€”ï¼šåœ¨éœ€è¦å¤šä¸ªçª—å£å¤ç”¨ OpenGL èµ„æºï¼Œé¿å…é‡å¤åˆ›å»ºã€èŠ‚çœèµ„æºæ—¶ï¼Œå¯è®¾ç½®å…±äº«çª—å£ã€‚
+				ä¾‹å¦‚ï¼Œä¸€ä¸ªåº”ç”¨æœ‰å¤šä¸ªè§†å›¾çª—å£å±•ç¤ºç›¸ä¼¼å†…å®¹ï¼Œå¯è®©å®ƒä»¬å…±äº« OpenGL èµ„æºã€‚
 		*/
-		m_Window = glfwCreateWindow((int)m_Data.Width, (int)m_Data.Height, m_Data.Title.c_str(), nullptr, nullptr);//´´½¨´°¿Ú
+		m_Window = glfwCreateWindow((int)m_Data.Width, (int)m_Data.Height, m_Data.Title.c_str(), nullptr, nullptr);//åˆ›å»ºçª—å£
 		//***
 
-		//¸ù¾İ²»Í¬ Í¼ĞÎ API Ê¹ÓÃ²»Í¬ÉÏÏÂÎÄÀà
+		//æ ¹æ®ä¸åŒ å›¾å½¢ API ä½¿ç”¨ä¸åŒä¸Šä¸‹æ–‡ç±»
 		m_Context = new OpenGLContext(m_Window);
-		m_Context->Init();//³õÊ¼»¯ÉÏÏÂÎÄ
+		m_Context->Init();//åˆå§‹åŒ–ä¸Šä¸‹æ–‡
 		
-		glfwSetWindowUserPointer(m_Window, &m_Data);//½«´°¿ÚÓë½á¹¹Ìå¹ØÁª,Í¨¹ı½á¹¹ÌåÖĞµÄ±äÁ¿ÉèÖÃ´°¿ÚÊôĞÔ
+		glfwSetWindowUserPointer(m_Window, &m_Data);//å°†çª—å£ä¸ç»“æ„ä½“å…³è”,é€šè¿‡ç»“æ„ä½“ä¸­çš„å˜é‡è®¾ç½®çª—å£å±æ€§
 
-		// GLFW »Øµ÷º¯Êı
-		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)//´°¿Ú³ß´çÏûÏ¢
+		// GLFW å›è°ƒå‡½æ•°
+		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)//çª—å£å°ºå¯¸æ¶ˆæ¯
 			{
-				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);//»ñÈ¡´°¿Ú×Ô¶¨ÒåÖ¸Õë(×Ô¶¨Òå´°¿ÚÊı¾İ½á¹¹Ìå)
-				data.Width = width;//½«¼àÌıÊı¾İ¼ÇÂ¼ÔÚÊı¾İÖĞ
+				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);//è·å–çª—å£è‡ªå®šä¹‰æŒ‡é’ˆ(è‡ªå®šä¹‰çª—å£æ•°æ®ç»“æ„ä½“)
+				data.Width = width;//å°†ç›‘å¬æ•°æ®è®°å½•åœ¨æ•°æ®ä¸­
 				data.Height = height;
 
-				WindowResizeEvent windowResize(width, height);//½«¼àÌıÊı¾İ·â×°³ÉÊÂ¼ş
-				data.EventCallback(windowResize);//¸ù¾İ¶ÔÓ¦ÊÂ¼şµ÷ÓÃ¶ÔÓ¦º¯Êı
+				WindowResizeEvent windowResize(width, height);//å°†ç›‘å¬æ•°æ®å°è£…æˆäº‹ä»¶
+				data.EventCallback(windowResize);//æ ¹æ®å¯¹åº”äº‹ä»¶è°ƒç”¨å¯¹åº”å‡½æ•°
 			});
-		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)//´°¿Ú¹Ø±ÕÏûÏ¢
+		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)//çª—å£å…³é—­æ¶ˆæ¯
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 				WindowCloseEvent windowClose;
 				data.EventCallback(windowClose);
 			});
-		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods)//¼üÅÌÏûÏ¢
+		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods)//é”®ç›˜æ¶ˆæ¯
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-				switch (action)//¸ù¾İ¼üÅÌ²»Í¬ĞĞÎª(°´ÏÂ,ËÉ¿ª,ÖØ¸´),×ö³ö²»Í¬ÏìÓ¦
+				switch (action)//æ ¹æ®é”®ç›˜ä¸åŒè¡Œä¸º(æŒ‰ä¸‹,æ¾å¼€,é‡å¤),åšå‡ºä¸åŒå“åº”
 				{
 					case GLFW_PRESS:
 					{
@@ -112,31 +112,31 @@ namespace Sakura
 					}
 					case GLFW_REPEAT:
 					{
-						KeyPressedEvent keyPress(key, 1);// 1 ´ú±íÖØ¸´×´Ì¬
+						KeyPressedEvent keyPress(key, 1);// 1 ä»£è¡¨é‡å¤çŠ¶æ€
 						data.EventCallback(keyPress);
 						break;
 					}
 				}
 			});
-		glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int codepoint)//»ñÈ¡×Ö·û
+		glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int codepoint)//è·å–å­—ç¬¦
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 				KeyTypedEvent keyType(codepoint);
 				data.EventCallback(keyType);
 			});
-		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xpos, double ypos)//Êó±êÒÆ¶¯ÏûÏ¢
+		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xpos, double ypos)//é¼ æ ‡ç§»åŠ¨æ¶ˆæ¯
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
 				MouseMovedEvent mouseMove((float)xpos, (float)ypos);
 				data.EventCallback(mouseMove);
 			});
-		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)//Êó±ê°´¼üÏûÏ¢
+		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)//é¼ æ ‡æŒ‰é”®æ¶ˆæ¯
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
-				switch (action)//¸ù¾İÊó±ê²»Í¬ĞĞÎª(°´ÏÂ,ËÉ¿ª),×ö³ö²»Í¬ÏìÓ¦
+				switch (action)//æ ¹æ®é¼ æ ‡ä¸åŒè¡Œä¸º(æŒ‰ä¸‹,æ¾å¼€),åšå‡ºä¸åŒå“åº”
 				{
 					case GLFW_PRESS:
 					{
@@ -152,7 +152,7 @@ namespace Sakura
 					}
 				}
 			});
-		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xoffset, double yoffset)//Êó±ê¹öÂÖÏûÏ¢
+		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xoffset, double yoffset)//é¼ æ ‡æ»šè½®æ¶ˆæ¯
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
@@ -163,18 +163,18 @@ namespace Sakura
 
 
 
-	void WindowsWindow::Shutdown()//Ö´ĞĞÇåÀí´°¿Ú
+	void WindowsWindow::Shutdown()//æ‰§è¡Œæ¸…ç†çª—å£
 	{
 		glfwDestroyWindow(m_Window);
 	}
 
-	void WindowsWindow::OnUpdata()//´°¿Ú¸üĞÂ
+	void WindowsWindow::OnUpdata()//çª—å£æ›´æ–°
 	{
-		glfwPollEvents();//´ÓÊÂ¼ş¶ÓÁĞÖĞÈ¡³öÊÂ¼ş£¬²¢µ÷ÓÃ¶ÔÓ¦µÄ»Øµ÷º¯Êı(·Ç×èÈû:º¯Êı²»»áµÈ´ıĞÂÊÂ¼şµ½À´£¬´¦ÀíÍêÏÖÓĞÊÂ¼ş¾ÍÁ¢¼´·µ»Ø)
-		m_Context->SwapBuffer();//Ë«»º³å
+		glfwPollEvents();//ä»äº‹ä»¶é˜Ÿåˆ—ä¸­å–å‡ºäº‹ä»¶ï¼Œå¹¶è°ƒç”¨å¯¹åº”çš„å›è°ƒå‡½æ•°(éé˜»å¡:å‡½æ•°ä¸ä¼šç­‰å¾…æ–°äº‹ä»¶åˆ°æ¥ï¼Œå¤„ç†å®Œç°æœ‰äº‹ä»¶å°±ç«‹å³è¿”å›)
+		m_Context->SwapBuffer();//åŒç¼“å†²
 	}
 
-	void WindowsWindow::SetVSync(bool enabled) //ÉèÖÃ´¹Ö±Í¬²½
+	void WindowsWindow::SetVSync(bool enabled) //è®¾ç½®å‚ç›´åŒæ­¥
 	{
 		if (enabled)
 			glfwSwapInterval(1);
@@ -183,13 +183,13 @@ namespace Sakura
 
 		m_Data.VSync = enabled;
 	}
-	//´¹Ö±Í¬²½
+	//å‚ç›´åŒæ­¥
 	/*
-	* glfwSwapInterval(1);ÆôÓÃ´¹Ö±Í¬²½¡£
-	* GPU »áµÈ´ıÏÔÊ¾Æ÷Íê³ÉÒ»Ö¡Ë¢ĞÂºóÔÙ½»»»Ç°ºó»º³åÇø£¬Ïû³ı»­ÃæËºÁÑ£¬µ«¿ÉÄÜÔö¼ÓÊäÈëÑÓ³Ù¡£
+	* glfwSwapInterval(1);å¯ç”¨å‚ç›´åŒæ­¥ã€‚
+	* GPU ä¼šç­‰å¾…æ˜¾ç¤ºå™¨å®Œæˆä¸€å¸§åˆ·æ–°åå†äº¤æ¢å‰åç¼“å†²åŒºï¼Œæ¶ˆé™¤ç”»é¢æ’•è£‚ï¼Œä½†å¯èƒ½å¢åŠ è¾“å…¥å»¶è¿Ÿã€‚
 	*/
 
-	bool WindowsWindow::IsVSync() const //ÅĞ¶Ï´¹Ö±Í¬²½
+	bool WindowsWindow::IsVSync() const //åˆ¤æ–­å‚ç›´åŒæ­¥
 	{
 		return m_Data.VSync;
 	}

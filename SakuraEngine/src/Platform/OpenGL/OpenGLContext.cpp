@@ -1,4 +1,4 @@
-#include "sakuraPCH.h"
+ï»¿#include "sakuraPCH.h"
 #include "OpenGLContext.h"
 
 #include "Sakura/Log/Log.h"
@@ -16,18 +16,18 @@ namespace Sakura
 
 	void OpenGLContext::Init()
 	{
-		glfwMakeContextCurrent(m_Window);//Éú³Éµ±Ç°´°¿ÚµÄÉÏÏÂÎÄ
+		glfwMakeContextCurrent(m_Window);//ç”Ÿæˆå½“å‰çª—å£çš„ä¸Šä¸‹æ–‡
 		/*
-		* Ê¹ÓÃ glfwGetProcAddress »ñÈ¡µ±Ç°»·¾³ÏÂµÄ OpenGL º¯ÊıµÄµØÖ·£¬
-		* ²¢Í¨¹ı gladLoadGLLoader ½«ÕâĞ©º¯ÊıÖ¸Õë¼ÓÔØµ½³ÌĞòÖĞ£¬
-		* ´Ó¶øÊ¹µÃ³ÌĞò¿ÉÒÔµ÷ÓÃ OpenGL Ìá¹©µÄ¸÷ÖÖº¯Êı½øĞĞÍ¼ĞÎäÖÈ¾µÈ²Ù×÷¡£
+		* ä½¿ç”¨ glfwGetProcAddress è·å–å½“å‰ç¯å¢ƒä¸‹çš„ OpenGL å‡½æ•°çš„åœ°å€ï¼Œ
+		* å¹¶é€šè¿‡ gladLoadGLLoader å°†è¿™äº›å‡½æ•°æŒ‡é’ˆåŠ è½½åˆ°ç¨‹åºä¸­ï¼Œ
+		* ä»è€Œä½¿å¾—ç¨‹åºå¯ä»¥è°ƒç”¨ OpenGL æä¾›çš„å„ç§å‡½æ•°è¿›è¡Œå›¾å½¢æ¸²æŸ“ç­‰æ“ä½œã€‚
 		*/
-		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);//³õÊ¼»¯ glad
+		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);//åˆå§‹åŒ– glad
 		SAKURA_CORE_ASSERT(status, "Failed to initialize Glad!");
 	}
 	void OpenGLContext::SwapBuffer()
 	{
-		glfwSwapBuffers(m_Window);//½«ºóÌ¨»º³åÇøµÄÄÚÈİÏÔÊ¾µ½ÆÁÄ»ÉÏ¡£
+		glfwSwapBuffers(m_Window);//å°†åå°ç¼“å†²åŒºçš„å†…å®¹æ˜¾ç¤ºåˆ°å±å¹•ä¸Šã€‚
 	}
 }
 

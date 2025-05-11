@@ -1,11 +1,28 @@
-#include "sakuraPCH.h"
+ï»¿#include "sakuraPCH.h"
 #include "ImGuiLayer.h"
+
+/*
+* ä¿å­˜å½“å‰è­¦å‘ŠçŠ¶æ€ï¼ˆpushï¼‰ï¼Œå¹¶å°†å…¨å±€è­¦å‘Šç­‰çº§ä¸´æ—¶è°ƒæ•´ä¸º Level 3ã€‚
+* 
+* è­¦å‘Šç­‰çº§ï¼ˆ1~4ï¼‰ï¼š
+*	Level 1ï¼šä»…æ˜¾ç¤ºä¸¥é‡é”™è¯¯ã€‚
+*	Level 2ï¼šæ˜¾ç¤º Level 1 + å¸¸è§é”™è¯¯ã€‚
+*	Level 3ï¼šæ˜¾ç¤º Level 2 + å¤šæ•°è­¦å‘Šï¼ˆé»˜è®¤çº§åˆ«ï¼‰ã€‚
+*	Level 4ï¼šæ˜¾ç¤ºæ‰€æœ‰å¯èƒ½çš„è­¦å‘Šï¼ˆæœ€ä¸¥æ ¼ï¼‰ã€‚
+*/
+#pragma warning(push, 3)			// é™ä½è­¦å‘Šç­‰çº§åˆ° Level 3
+#pragma warning(disable: 4996)		//ä½¿ç”¨äº†ä¸å®‰å…¨çš„å·²å¼ƒç”¨å‡½æ•°ï¼ˆå»ºè®®ä¼˜å…ˆæ›¿æ¢å‡½æ•°ï¼‰
+#pragma warning(disable: 4005)		//å®é‡å¤å®šä¹‰ï¼ˆå»ºè®®ä½¿ç”¨å¤´æ–‡ä»¶ä¿æŠ¤ï¼‰ã€‚
+#pragma warning(disable: 6031)		//å¿½ç•¥å‡½æ•°è¿”å›å€¼ï¼ˆå»ºè®®æ£€æŸ¥è¿”å›å€¼ï¼‰ã€‚
 
 #include "imgui.h"
 
 #define IMGUI_IMPL_API
 #include "backends/imgui_impl_opengl3.h"
 #include "backends/imgui_impl_glfw.h"
+
+#pragma warning(pop)  // æ¢å¤åŸå§‹ç­‰çº§
+
 
 #include "Sakura/Application.h"
 
@@ -17,38 +34,38 @@ namespace Sakura
 
 	void ImGuiLayer::OnAttach()
 	{
-		// ³õÊ¼»¯ Dear ImGui ÉÏÏÂÎÄ
-		IMGUI_CHECKVERSION();          // ¼ì²é ImGui °æ±¾¼æÈİĞÔ£¨È·±£Óëµ±Ç°ºó¶ËÆ¥Åä£©
-		ImGui::CreateContext();        // ´´½¨ ImGui ºËĞÄÉÏÏÂÎÄ£¨±ØĞëÊ×ÏÈµ÷ÓÃ£©
+		// åˆå§‹åŒ– Dear ImGui ä¸Šä¸‹æ–‡
+		IMGUI_CHECKVERSION();          // æ£€æŸ¥ ImGui ç‰ˆæœ¬å…¼å®¹æ€§ï¼ˆç¡®ä¿ä¸å½“å‰åç«¯åŒ¹é…ï¼‰
+		ImGui::CreateContext();        // åˆ›å»º ImGui æ ¸å¿ƒä¸Šä¸‹æ–‡ï¼ˆå¿…é¡»é¦–å…ˆè°ƒç”¨ï¼‰
 
-		ImGuiIO& io = ImGui::GetIO();  // »ñÈ¡ ImGui ÊäÈëÊä³öÅäÖÃ£¨¼üÅÌ¡¢Êó±ê¡¢ÓÎÏ·ÊÖ±úµÈ£©
-		(void)io;                      // ÒÖÖÆ "Î´Ê¹ÓÃ±äÁ¿" ¾¯¸æ£¨ÈôºóĞøĞèÒªÊ¹ÓÃ¿ÉÒÆ³ı£©
+		ImGuiIO& io = ImGui::GetIO();  // è·å– ImGui è¾“å…¥è¾“å‡ºé…ç½®ï¼ˆé”®ç›˜ã€é¼ æ ‡ã€æ¸¸æˆæ‰‹æŸ„ç­‰ï¼‰
+		(void)io;                      // æŠ‘åˆ¶ "æœªä½¿ç”¨å˜é‡" è­¦å‘Šï¼ˆè‹¥åç»­éœ€è¦ä½¿ç”¨å¯ç§»é™¤ï¼‰
 
-		// ÆôÓÃ ImGui ¹¦ÄÜÌØĞÔ
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // ÆôÓÃ¼üÅÌµ¼º½£¨Tab/Shift+Tab µÈÇĞ»»½¹µã£©
-		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // ÆôÓÃÓÎÏ·ÊÖ±úµ¼º½£¨°´ĞèÈ¡Ïû×¢ÊÍ£©
-		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // ÆôÓÃ´°¿ÚÍ£¿¿²¼¾Ö£¨Ö§³ÖÍÏ×§´°¿ÚºÏ²¢/²ğ·Ö£©***
-		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // ÆôÓÃ¶àÊÓ¿Ú£¨Ö§³Ö¶ÀÁ¢ÓÚÖ÷´°¿ÚµÄµ¯³ö´°¿Ú£©
-		//io.ConfigViewportsNoAutoMerge = true;                     // ½ûÓÃÊÓ¿Ú×Ô¶¯ºÏ²¢£¨¸ß¼¶ÅäÖÃ£¬°´ĞèÆôÓÃ£©
-		//io.ConfigViewportsNoTaskBarIcon = true;                   // ÊÓ¿Ú²»ÏÔÊ¾ÔÚÈÎÎñÀ¸£¨ÊÊºÏ¹¤¾ß´°¿Ú£©
+		// å¯ç”¨ ImGui åŠŸèƒ½ç‰¹æ€§
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // å¯ç”¨é”®ç›˜å¯¼èˆªï¼ˆTab/Shift+Tab ç­‰åˆ‡æ¢ç„¦ç‚¹ï¼‰
+		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // å¯ç”¨æ¸¸æˆæ‰‹æŸ„å¯¼èˆªï¼ˆæŒ‰éœ€å–æ¶ˆæ³¨é‡Šï¼‰
+		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // å¯ç”¨çª—å£åœé å¸ƒå±€ï¼ˆæ”¯æŒæ‹–æ‹½çª—å£åˆå¹¶/æ‹†åˆ†ï¼‰***
+		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // å¯ç”¨å¤šè§†å£ï¼ˆæ”¯æŒç‹¬ç«‹äºä¸»çª—å£çš„å¼¹å‡ºçª—å£ï¼‰
+		//io.ConfigViewportsNoAutoMerge = true;                     // ç¦ç”¨è§†å£è‡ªåŠ¨åˆå¹¶ï¼ˆé«˜çº§é…ç½®ï¼ŒæŒ‰éœ€å¯ç”¨ï¼‰
+		//io.ConfigViewportsNoTaskBarIcon = true;                   // è§†å£ä¸æ˜¾ç¤ºåœ¨ä»»åŠ¡æ ï¼ˆé€‚åˆå·¥å…·çª—å£ï¼‰
 
-		// ÉèÖÃ ImGui Ö÷Ìâ·ç¸ñ
-		ImGui::StyleColorsDark();        // Ê¹ÓÃÉîÉ«Ö÷Ìâ£¨ ImGui ÄÚÖÃÖ÷Ìâ£ºDark/Light/Classic£©
+		// è®¾ç½® ImGui ä¸»é¢˜é£æ ¼
+		ImGui::StyleColorsDark();        // ä½¿ç”¨æ·±è‰²ä¸»é¢˜ï¼ˆ ImGui å†…ç½®ä¸»é¢˜ï¼šDark/Light/Classicï¼‰
 
-		// ÊÓ¿ÚÄ£Ê½ÏÂµÄÑùÊ½µ÷Õû£¨Ê¹ÏµÍ³´°¿ÚÓë ImGui ´°¿ÚÍâ¹ÛÒ»ÖÂ£©
-		ImGuiStyle& style = ImGui::GetStyle();  // »ñÈ¡µ±Ç°ÑùÊ½ÅäÖÃ
+		// è§†å£æ¨¡å¼ä¸‹çš„æ ·å¼è°ƒæ•´ï¼ˆä½¿ç³»ç»Ÿçª—å£ä¸ ImGui çª—å£å¤–è§‚ä¸€è‡´ï¼‰
+		ImGuiStyle& style = ImGui::GetStyle();  // è·å–å½“å‰æ ·å¼é…ç½®
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
-			style.WindowRounding = 0.0f;         // È¡Ïû´°¿ÚÔ²½Ç£¨ÏµÍ³Ô­Éú´°¿ÚÍ¨³£ÎŞÔ²½Ç£©
-			style.Colors[ImGuiCol_WindowBg].w = 1.0f;  // ´°¿Ú±³¾°ÍêÈ«²»Í¸Ã÷£¨±ÜÃâÓëÏµÍ³´°¿Ú»ìÏı£©
+			style.WindowRounding = 0.0f;         // å–æ¶ˆçª—å£åœ†è§’ï¼ˆç³»ç»ŸåŸç”Ÿçª—å£é€šå¸¸æ— åœ†è§’ï¼‰
+			style.Colors[ImGuiCol_WindowBg].w = 1.0f;  // çª—å£èƒŒæ™¯å®Œå…¨ä¸é€æ˜ï¼ˆé¿å…ä¸ç³»ç»Ÿçª—å£æ··æ·†ï¼‰
 		}
 
-		// »ñÈ¡µ±Ç°Ó¦ÓÃµÄ´°¿Ú¾ä±ú£¨GLFW ´°¿ÚÖ¸Õë£©
+		// è·å–å½“å‰åº”ç”¨çš„çª—å£å¥æŸ„ï¼ˆGLFW çª—å£æŒ‡é’ˆï¼‰
 		auto window = static_cast<GLFWwindow*>(Application::GetApplication().GetWindow().GetNativeWindow());
 
-		// ³õÊ¼»¯ ImGui Æ½Ì¨¼°äÖÈ¾ºó¶Ë
-		bool success = ImGui_ImplGlfw_InitForOpenGL(window, true);  // ³õÊ¼»¯ GLFW Æ½Ì¨ºó¶Ë£¨µÚ¶ş¸ö²ÎÊı£ºÊÇ·ñ°²×° GLFW ÊäÈë»Øµ÷£©
-		success &= ImGui_ImplOpenGL3_Init("#version 460");       // ³õÊ¼»¯ OpenGL äÖÈ¾ºó¶Ë£¨²ÎÊı£ºGLSL °æ±¾ÉùÃ÷£¬ÓëÏÔ¿¨Ö§³ÖÆ¥Åä£©
+		// åˆå§‹åŒ– ImGui å¹³å°åŠæ¸²æŸ“åç«¯
+		bool success = ImGui_ImplGlfw_InitForOpenGL(window, true);  // åˆå§‹åŒ– GLFW å¹³å°åç«¯ï¼ˆç¬¬äºŒä¸ªå‚æ•°ï¼šæ˜¯å¦å®‰è£… GLFW è¾“å…¥å›è°ƒï¼‰
+		success &= ImGui_ImplOpenGL3_Init("#version 460");       // åˆå§‹åŒ– OpenGL æ¸²æŸ“åç«¯ï¼ˆå‚æ•°ï¼šGLSL ç‰ˆæœ¬å£°æ˜ï¼Œä¸æ˜¾å¡æ”¯æŒåŒ¹é…ï¼‰
 		if (!success)
 		{
 			assert(false);
@@ -57,7 +74,7 @@ namespace Sakura
 
 	void ImGuiLayer::OnDetach()
 	{
-		//ÇåÀí
+		//æ¸…ç†
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
@@ -71,8 +88,8 @@ namespace Sakura
 
 	void ImGuiLayer::Begin()
 	{
-		assert(ImGui::GetCurrentContext() != nullptr);//¼ì²é ImGui ÉÏÏÂÎÄÊÇ·ñÒÑ´´½¨
-		//³õÊ¼»¯ OpenGL, Glfw ×´Ì¬
+		assert(ImGui::GetCurrentContext() != nullptr);//æ£€æŸ¥ ImGui ä¸Šä¸‹æ–‡æ˜¯å¦å·²åˆ›å»º
+		//åˆå§‹åŒ– OpenGL, Glfw çŠ¶æ€
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
@@ -80,30 +97,30 @@ namespace Sakura
 
 	void ImGuiLayer::End()
 	{
-		// ÉèÖÃ ImGui µÄÏÔÊ¾³ß´ç£¨ÓëÓ¦ÓÃ´°¿Ú´óĞ¡Í¬²½£©
+		// è®¾ç½® ImGui çš„æ˜¾ç¤ºå°ºå¯¸ï¼ˆä¸åº”ç”¨çª—å£å¤§å°åŒæ­¥ï¼‰
 		ImGuiIO& io = ImGui::GetIO();
 		auto& app = Application::GetApplication();
-		io.DisplaySize = ImVec2{ (float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight() };  // ½« ImGui µÄÂß¼­·Ö±æÂÊÉèÖÃÎªÓ¦ÓÃ´°¿ÚµÄÎïÀí³ß´ç
+		io.DisplaySize = ImVec2{ (float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight() };  // å°† ImGui çš„é€»è¾‘åˆ†è¾¨ç‡è®¾ç½®ä¸ºåº”ç”¨çª—å£çš„ç‰©ç†å°ºå¯¸
 
-		// äÖÈ¾½×¶Î
-		ImGui::Render();  // Éú³É ImGui µÄ»æÖÆÊı¾İ£¨¶¥µã¡¢Ë÷Òı¡¢ÑùÊ½ĞÅÏ¢µÈ£©
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());  // Í¨¹ı OpenGL ºó¶ËäÖÈ¾ ImGui µÄ»æÖÆÊı¾İ
+		// æ¸²æŸ“é˜¶æ®µ
+		ImGui::Render();  // ç”Ÿæˆ ImGui çš„ç»˜åˆ¶æ•°æ®ï¼ˆé¡¶ç‚¹ã€ç´¢å¼•ã€æ ·å¼ä¿¡æ¯ç­‰ï¼‰
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());  // é€šè¿‡ OpenGL åç«¯æ¸²æŸ“ ImGui çš„ç»˜åˆ¶æ•°æ®
 
-		// ¸üĞÂ²¢äÖÈ¾¶îÍâµÄÆ½Ì¨´°¿Ú£¨¶àÊÓ¿ÚÖ§³Ö£©
-		// £¨Æ½Ì¨Ïà¹Øº¯Êı¿ÉÄÜ»á¸Ä±äµ±Ç° OpenGL ÉÏÏÂÎÄ£¬Òò´ËÎÒÃÇ±£´æ/»Ö¸´ÉÏÏÂÎÄÒÔ±ãÓÚ´úÂëÒÆÖ²¡£
-		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)  // Èç¹ûÆôÓÃÁË¶àÊÓ¿Ú¹¦ÄÜ
+		// æ›´æ–°å¹¶æ¸²æŸ“é¢å¤–çš„å¹³å°çª—å£ï¼ˆå¤šè§†å£æ”¯æŒï¼‰
+		// ï¼ˆå¹³å°ç›¸å…³å‡½æ•°å¯èƒ½ä¼šæ”¹å˜å½“å‰ OpenGL ä¸Šä¸‹æ–‡ï¼Œå› æ­¤æˆ‘ä»¬ä¿å­˜/æ¢å¤ä¸Šä¸‹æ–‡ä»¥ä¾¿äºä»£ç ç§»æ¤ã€‚
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)  // å¦‚æœå¯ç”¨äº†å¤šè§†å£åŠŸèƒ½
 		{
-			GLFWwindow* backup_current_context = glfwGetCurrentContext();  // ±£´æµ±Ç° OpenGL ÉÏÏÂÎÄ£¨·ÀÖ¹±»Æ½Ì¨´°¿ÚĞŞ¸Ä£©
-			ImGui::UpdatePlatformWindows();  // ¸üĞÂÆ½Ì¨Ïà¹Ø´°¿Ú£¨Èç¶ÀÁ¢ÓÚÖ÷´°¿ÚµÄµ¯³ö´°¿Ú£©
-			ImGui::RenderPlatformWindowsDefault();  // äÖÈ¾Æ½Ì¨´°¿ÚµÄÍâ¹Û£¨±êÌâÀ¸¡¢±ß¿òµÈÏµÍ³Ô­ÉúÔªËØ£©
-			glfwMakeContextCurrent(backup_current_context);  // »Ö¸´Ö®Ç°µÄ OpenGL ÉÏÏÂÎÄ£¨È·±£ºóĞøäÖÈ¾Ê¹ÓÃÕıÈ·µÄÉÏÏÂÎÄ£©
+			GLFWwindow* backup_current_context = glfwGetCurrentContext();  // ä¿å­˜å½“å‰ OpenGL ä¸Šä¸‹æ–‡ï¼ˆé˜²æ­¢è¢«å¹³å°çª—å£ä¿®æ”¹ï¼‰
+			ImGui::UpdatePlatformWindows();  // æ›´æ–°å¹³å°ç›¸å…³çª—å£ï¼ˆå¦‚ç‹¬ç«‹äºä¸»çª—å£çš„å¼¹å‡ºçª—å£ï¼‰
+			ImGui::RenderPlatformWindowsDefault();  // æ¸²æŸ“å¹³å°çª—å£çš„å¤–è§‚ï¼ˆæ ‡é¢˜æ ã€è¾¹æ¡†ç­‰ç³»ç»ŸåŸç”Ÿå…ƒç´ ï¼‰
+			glfwMakeContextCurrent(backup_current_context);  // æ¢å¤ä¹‹å‰çš„ OpenGL ä¸Šä¸‹æ–‡ï¼ˆç¡®ä¿åç»­æ¸²æŸ“ä½¿ç”¨æ­£ç¡®çš„ä¸Šä¸‹æ–‡ï¼‰
 		}
 	}
 
 
 	void ImGuiLayer::OnImGuiRender()
 	{
-		//ÑİÊ¾´°¿Ú
+		//æ¼”ç¤ºçª—å£
 		static bool show = true;
 		ImGui::ShowDemoWindow(&show);
 	}

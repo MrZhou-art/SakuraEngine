@@ -1,17 +1,17 @@
-#pragma once
+ï»¿#pragma once
 
-//´ËÍ·ÎÄ¼şÓÃÓÚÒıÈë SakuraEngine ½Ó¿ÚÎÄ¼ş
+//æ­¤å¤´æ–‡ä»¶ç”¨äºå¼•å…¥ SakuraEngine æ¥å£æ–‡ä»¶
 
-#include "Sakura/Application.h"//Ó¦ÓÃ²ã
-#include "Sakura/Layer/Layer.h"//Í¼²ã
-#include "Sakura/Log/Log.h"//ÈÕÖ¾¼ÇÂ¼Æ÷
+#include "Sakura/Application.h"//åº”ç”¨å±‚
+#include "Sakura/Layer/Layer.h"//å›¾å±‚
+#include "Sakura/Log/Log.h"//æ—¥å¿—è®°å½•å™¨
 
-#include "Sakura/Input/Input.h"//ÊäÈëÂÖÑ¯ÏµÍ³
+#include "Sakura/Input/Input.h"//è¾“å…¥è½®è¯¢ç³»ç»Ÿ
 #include "Sakura/Input/KeyCodes.h"
 #include "Sakura/Input/MouseButtonCodes.h"
 
-#include "Sakura/ImGui/ImGuiLayer.h"// ImGui Í¼²ã
+#include "Sakura/ImGui/ImGuiLayer.h"// ImGui å›¾å±‚
 
-//---------Èë¿Úµã-------------
+//---------å…¥å£ç‚¹-------------
 #include "Sakura/EntryPoint.h"
 //----------------------------

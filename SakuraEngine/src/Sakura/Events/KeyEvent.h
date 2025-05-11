@@ -1,79 +1,79 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Event.h"
 
 
 namespace Sakura
 {
-	//¼üÅÌÊÂ¼şÀà(³éÏóÀà,×÷Îª¼ü°´ÏÂÊÂ¼şºÍ¼üËÉ¿ªÊÂ¼şµÄ»ùÀà)
+	//é”®ç›˜äº‹ä»¶ç±»(æŠ½è±¡ç±»,ä½œä¸ºé”®æŒ‰ä¸‹äº‹ä»¶å’Œé”®æ¾å¼€äº‹ä»¶çš„åŸºç±»)
 	class KeyEvent : public Event 
 	{
 	public:
-		inline int GetKeyCode() const { return m_KeyCode; }//»ñÈ¡¼üÅÌ°´¼üÂëÖµ
+		inline int GetKeyCode() const { return m_KeyCode; }//è·å–é”®ç›˜æŒ‰é”®ç å€¼
 
-		EVENT_CLASS_CATEGORY(EVENTCATEGORY_KEYBOARD | EVENTCATEGORY_INPUT);//Éú³É»ñÈ¡µ±Ç°ÊÂ¼şÖÖÀàÑÚÂëµÄ·½·¨
+		EVENT_CLASS_CATEGORY(EVENTCATEGORY_KEYBOARD | EVENTCATEGORY_INPUT);//ç”Ÿæˆè·å–å½“å‰äº‹ä»¶ç§ç±»æ©ç çš„æ–¹æ³•
 
 	protected:
 		KeyEvent(int keyCode) 
-			: m_KeyCode(keyCode) {}//ÓĞ²Î¹¹ÔìÆ÷(ÉèÖÃ¼üÅÌÂëÖµ)
+			: m_KeyCode(keyCode) {}//æœ‰å‚æ„é€ å™¨(è®¾ç½®é”®ç›˜ç å€¼)
 
-		int m_KeyCode;//¼üÅÌÂëÖµ
+		int m_KeyCode;//é”®ç›˜ç å€¼
 	};
 
-	//¼ü°´ÏÂÊÂ¼ş
+	//é”®æŒ‰ä¸‹äº‹ä»¶
 	class SAKURA_API KeyPressedEvent : public KeyEvent
 	{
 	public:
 		KeyPressedEvent(int keyCode, int repeatCount)
-			: KeyEvent(keyCode), m_RepeatCount(repeatCount){}//ÓĞ²Î¹¹ÔìÆ÷(ÉèÖÃ¼üÅÌÂëÖµ,°´ÏÂ¼ÆÊı)
+			: KeyEvent(keyCode), m_RepeatCount(repeatCount){}//æœ‰å‚æ„é€ å™¨(è®¾ç½®é”®ç›˜ç å€¼,æŒ‰ä¸‹è®¡æ•°)
 
-		inline int GetRepeatCount() const { return m_RepeatCount; }//»ñÈ¡°´ÏÂ¼ÆÊı
+		inline int GetRepeatCount() const { return m_RepeatCount; }//è·å–æŒ‰ä¸‹è®¡æ•°
 		
-		std::string ToString() const override//Êä³ö¼üÅÌÏûÏ¢
+		std::string ToString() const override//è¾“å‡ºé”®ç›˜æ¶ˆæ¯
 		{
 			std::stringstream ss;
 			ss << "KeyPressedEvent: " << m_KeyCode << "(" << m_RepeatCount << "repeats)";
 			return ss.str();
 		}
 
-		EVENT_CLASS_TYPE(EventType::KeyPressed)//Éú³É Type ÓĞ¹ØµÄº¯Êı
+		EVENT_CLASS_TYPE(EventType::KeyPressed)//ç”Ÿæˆ Type æœ‰å…³çš„å‡½æ•°
 	private:
-		int m_RepeatCount;//°´ÏÂ¼ÆÊı
+		int m_RepeatCount;//æŒ‰ä¸‹è®¡æ•°
 	};
 
-	//¼üËÉ¿ªÊÂ¼ş
+	//é”®æ¾å¼€äº‹ä»¶
 	class SAKURA_API KeyReleasedEvent : public KeyEvent
 	{
 	public:
 		KeyReleasedEvent(int keyCode)
-			: KeyEvent(keyCode){}//ÓĞ²Î¹¹ÔìÆ÷(ÉèÖÃ¼üÅÌÂëÖµ)
+			: KeyEvent(keyCode){}//æœ‰å‚æ„é€ å™¨(è®¾ç½®é”®ç›˜ç å€¼)
 
-		std::string ToString() const override//Êä³ö¼üÅÌÏûÏ¢
+		std::string ToString() const override//è¾“å‡ºé”®ç›˜æ¶ˆæ¯
 		{
 			std::stringstream ss;
 			ss << "KeyReleasedEvent: " << m_KeyCode <<  " is released";
 			return ss.str();
 		}
 
-		EVENT_CLASS_TYPE(EventType::KeyReleased)//Éú³É Type ÓĞ¹ØµÄº¯Êı
+		EVENT_CLASS_TYPE(EventType::KeyReleased)//ç”Ÿæˆ Type æœ‰å…³çš„å‡½æ•°
 	private:
 	};
 
-	//¼üÅÌÀàĞÍÊÂ¼ş
+	//é”®ç›˜ç±»å‹äº‹ä»¶
 	class SAKURA_API KeyTypedEvent : public KeyEvent
 	{
 	public:
 		KeyTypedEvent(int keyCode)
-			: KeyEvent(keyCode) {}//ÓĞ²Î¹¹ÔìÆ÷(ÉèÖÃ¼üÅÌÂëÖµ)
+			: KeyEvent(keyCode) {}//æœ‰å‚æ„é€ å™¨(è®¾ç½®é”®ç›˜ç å€¼)
 
-		std::string ToString() const override//Êä³ö¼üÅÌÏûÏ¢
+		std::string ToString() const override//è¾“å‡ºé”®ç›˜æ¶ˆæ¯
 		{
 			std::stringstream ss;
 			ss << "KeyTypedEvent: " << m_KeyCode << " is released";
 			return ss.str();
 		}
 
-		EVENT_CLASS_TYPE(EventType::KeyTyped)//Éú³É Type ÓĞ¹ØµÄº¯Êı
+		EVENT_CLASS_TYPE(EventType::KeyTyped)//ç”Ÿæˆ Type æœ‰å…³çš„å‡½æ•°
 	private:
 	};
 }

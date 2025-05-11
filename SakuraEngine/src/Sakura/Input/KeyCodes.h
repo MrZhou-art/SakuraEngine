@@ -1,7 +1,7 @@
-#pragma once
+﻿#pragma once
 
 
-//form GLFW(glfw �ļ������ ASCII ����ı�׼,������ת��Ϊ char ���������Ӧ�ļ�)
+//form GLFW(glfw 的键码符合 ASCII 编码的标准,将键码转换为 char 可以输出对应的键)
 #define SAKURA_KEY_SPACE              32
 #define SAKURA_KEY_APOSTROPHE         39  /* ' */
 #define SAKURA_KEY_COMMA              44  /* , */

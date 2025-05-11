@@ -1,14 +1,14 @@
-#pragma once
+ï»¿#pragma once
 #include "sakuraPCH.h"
 #include "Sakura/core.h"
 
 
 namespace Sakura
 {
-	//Ä¿Ç°ÒıÇæÖĞµÄÊÂ¼şÊÇ×èÈûµÄ,Ò»µ©½ÓÊÜÏûÏ¢,Á¢¿Ì´¦Àí
-	//Î´À´¿ÉÒÔÊ¹ÓÃÊÂ¼ş»º³åÇøÓò
+	//ç›®å‰å¼•æ“ä¸­çš„äº‹ä»¶æ˜¯é˜»å¡çš„,ä¸€æ—¦æ¥å—æ¶ˆæ¯,ç«‹åˆ»å¤„ç†
+	//æœªæ¥å¯ä»¥ä½¿ç”¨äº‹ä»¶ç¼“å†²åŒºåŸŸ
 
-	enum class EventType // Ã¶¾ÙÊÂ¼şÀàĞÍ(Ç¿ÀàĞÍÃ¶¾Ù:±ØĞëÊ¹ÓÃ×÷ÓÃÓòÇ°×º,²»¿ÉÒşÊ½×ª»»ÎªÕûÊı£¬±ØĞëÏÔÊ½×ª»»(static_cast))
+	enum class EventType // æšä¸¾äº‹ä»¶ç±»å‹(å¼ºç±»å‹æšä¸¾:å¿…é¡»ä½¿ç”¨ä½œç”¨åŸŸå‰ç¼€,ä¸å¯éšå¼è½¬æ¢ä¸ºæ•´æ•°ï¼Œå¿…é¡»æ˜¾å¼è½¬æ¢(static_cast))
 	{
 		None = 0,
 		WindowClose, WindowResize, WindowFocus, WindowMoved, 
@@ -17,9 +17,9 @@ namespace Sakura
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 	};
 
-	enum EventCategory : int//Ã¶¾ÙÊÂ¼şÖÖÀà(´«Í³Ã¶¾Ù:ÎŞĞëÊ¹ÓÃ×÷ÓÃÓòÇ°×º,Ã¶¾ÙÖµ¿ÉÒşÊ½×ª»»ÎªÕûÊıÀàĞÍ)
+	enum EventCategory : int//æšä¸¾äº‹ä»¶ç§ç±»(ä¼ ç»Ÿæšä¸¾:æ— é¡»ä½¿ç”¨ä½œç”¨åŸŸå‰ç¼€,æšä¸¾å€¼å¯éšå¼è½¬æ¢ä¸ºæ•´æ•°ç±»å‹)
 	{
-		//Ê¹ÓÃ¶ş½øÖÆÎ»ÑÚÂë,±ãÓÚ¶ÔÏûÏ¢·ÖÀà´¦Àí
+		//ä½¿ç”¨äºŒè¿›åˆ¶ä½æ©ç ,ä¾¿äºå¯¹æ¶ˆæ¯åˆ†ç±»å¤„ç†
 		NONE						= 0,
 		EVENTCATEGORY_APPLICATION	= BIT(0),
 		EVENTCATEGORY_INPUT			= BIT(1),
@@ -28,10 +28,10 @@ namespace Sakura
 		EVENTCATEGORY_MOUSEBUTTON	= BIT(4)
 	};
 
-//¶¨Òå¼ò»¯ÊÂ¼şÏµÍ³ÊµÏÖµÄ¹¤¾ß
-	//##£¨±ê¼ÇÕ³Ìù²Ù×÷·û£©£º½« EventType::Óëºê²ÎÊı type Á¬½Ó³ÉÍêÕûµÄÃ¶¾ÙÖµ
-	//#£¨×Ö·û´®»¯²Ù×÷·û£©: ½«ºê²ÎÊı type ×ª»»Îª×Ö·û´®×ÖÃæÁ¿¡£
-	//Æä×ÓÀàÍ¨¹ıÔ¤´¦ÀíÆ÷×Ô¶¯Éú³ÉÊÂ¼şÀàµÄ¹Ø¼ü½Ó¿Ú£¬¼õÉÙÖØ¸´´úÂë.
+//å®šä¹‰ç®€åŒ–äº‹ä»¶ç³»ç»Ÿå®ç°çš„å·¥å…·
+	//##ï¼ˆæ ‡è®°ç²˜è´´æ“ä½œç¬¦ï¼‰ï¼šå°† EventType::ä¸å®å‚æ•° type è¿æ¥æˆå®Œæ•´çš„æšä¸¾å€¼
+	//#ï¼ˆå­—ç¬¦ä¸²åŒ–æ“ä½œç¬¦ï¼‰: å°†å®å‚æ•° type è½¬æ¢ä¸ºå­—ç¬¦ä¸²å­—é¢é‡ã€‚
+	//å…¶å­ç±»é€šè¿‡é¢„å¤„ç†å™¨è‡ªåŠ¨ç”Ÿæˆäº‹ä»¶ç±»çš„å…³é”®æ¥å£ï¼Œå‡å°‘é‡å¤ä»£ç .
 #define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return type; }\
 								virtual EventType GetEventType() const override { return GetStaticType(); }\
 								virtual const char* GetName_C() const override { return #type; }
@@ -40,49 +40,49 @@ namespace Sakura
 
 	class SAKURA_API Event
 	{
-		friend class EventDispatcher;//ÓÑÔªÊÂ¼ş·Ö·¢Æ÷,ÈÃÆä»ñÈ¡ m_Handled
+		friend class EventDispatcher;//å‹å…ƒäº‹ä»¶åˆ†å‘å™¨,è®©å…¶è·å– m_Handled
 	public:
-		virtual EventType GetEventType() const = 0;//»ñÈ¡ÊÂ¼şÀàĞÍ
-		virtual const char* GetName_C() const = 0;//»ñÈ¡charÀàĞÍµÄÊÂ¼şÃû×Ö
-		virtual int GetCategoryFlags() const = 0;//»ñÈ¡µ±Ç°ÊÂ¼şÖÖÀàÑÚÂë
-		virtual std::string ToString() const { return GetName_C(); }//»ñÈ¡stringÀàĞÍµÄÊÂ¼şÃû×Ö
-		inline virtual bool GetHandled() const { return m_Handled; }//»ñÈ¡ÊÂ¼ş´¦Àí×´Ì¬
+		virtual EventType GetEventType() const = 0;//è·å–äº‹ä»¶ç±»å‹
+		virtual const char* GetName_C() const = 0;//è·å–charç±»å‹çš„äº‹ä»¶åå­—
+		virtual int GetCategoryFlags() const = 0;//è·å–å½“å‰äº‹ä»¶ç§ç±»æ©ç 
+		virtual std::string ToString() const { return GetName_C(); }//è·å–stringç±»å‹çš„äº‹ä»¶åå­—
+		inline virtual bool GetHandled() const { return m_Handled; }//è·å–äº‹ä»¶å¤„ç†çŠ¶æ€
 
-		inline bool IsInCategory(EventCategory category)//ÅĞ¶ÏÊµ²ÎÊÇ·ñÊÇµ±Ç°ÊÂ¼şµÄÖÖÀà
+		inline bool IsInCategory(EventCategory category)//åˆ¤æ–­å®å‚æ˜¯å¦æ˜¯å½“å‰äº‹ä»¶çš„ç§ç±»
 		{
 			return GetCategoryFlags() & category;
 		}
 
 	protected:
-		bool m_Handled = false;//ÊÂ¼şÊÇ·ñ´¦ÓÚ´¦Àí×´Ì¬
+		bool m_Handled = false;//äº‹ä»¶æ˜¯å¦å¤„äºå¤„ç†çŠ¶æ€
 	};
 
-	//ÊÂ¼ş·Ö·¢Æ÷(ÓÃÓÚ½«ÊÂ¼ş¶¯Ì¬·ÖÅÉ¸ø¶ÔÓ¦µÄ´¦Àíº¯Êı)
-	//	²ÉÓÃÁË ¾²Ì¬ÀàĞÍ¼ì²é + ÔËĞĞÊ±ÀàĞÍÆ¥Åä µÄ²ßÂÔ£¬ÊµÏÖÁË¸ßĞ§ÇÒÀàĞÍ°²È«µÄÊÂ¼ş´¦Àí»úÖÆ
+	//äº‹ä»¶åˆ†å‘å™¨(ç”¨äºå°†äº‹ä»¶åŠ¨æ€åˆ†æ´¾ç»™å¯¹åº”çš„å¤„ç†å‡½æ•°)
+	//	é‡‡ç”¨äº† é™æ€ç±»å‹æ£€æŸ¥ + è¿è¡Œæ—¶ç±»å‹åŒ¹é… çš„ç­–ç•¥ï¼Œå®ç°äº†é«˜æ•ˆä¸”ç±»å‹å®‰å…¨çš„äº‹ä»¶å¤„ç†æœºåˆ¶
 	class EventDispatcher
 	{
 		/*
-		* ±ğÃûÄ£°å
-		* using ÎŞĞèÇ¶Ì× ::type,Ö§³ÖÄ£°å²ÎÊıÍÆµ¼£¬Óë C++ µÄ auto ºÍ·ºĞÍËã·¨¸ü¼æÈİ
-		* std::function ÊÇ C++ ±ê×¼¿âÌá¹©µÄ¶àÌ¬º¯Êı°ü×°Æ÷£¬¿É´æ´¢¡¢¸´ÖÆºÍµ÷ÓÃ *** ÈÎºÎ¿Éµ÷ÓÃ¶ÔÏó *** ¡£
-		* bool(T&) ±íÊ¾º¯ÊıÇ©Ãû£º½ÓÊÜÒ»¸ö T& ÀàĞÍµÄ²ÎÊı£¨ÊÂ¼şÒıÓÃ£©£¬·µ»Ø bool ÀàĞÍ¡£
+		* åˆ«åæ¨¡æ¿
+		* using æ— éœ€åµŒå¥— ::type,æ”¯æŒæ¨¡æ¿å‚æ•°æ¨å¯¼ï¼Œä¸ C++ çš„ auto å’Œæ³›å‹ç®—æ³•æ›´å…¼å®¹
+		* std::function æ˜¯ C++ æ ‡å‡†åº“æä¾›çš„å¤šæ€å‡½æ•°åŒ…è£…å™¨ï¼Œå¯å­˜å‚¨ã€å¤åˆ¶å’Œè°ƒç”¨ *** ä»»ä½•å¯è°ƒç”¨å¯¹è±¡ *** ã€‚
+		* bool(T&) è¡¨ç¤ºå‡½æ•°ç­¾åï¼šæ¥å—ä¸€ä¸ª T& ç±»å‹çš„å‚æ•°ï¼ˆäº‹ä»¶å¼•ç”¨ï¼‰ï¼Œè¿”å› bool ç±»å‹ã€‚
 		*/
-		template<typename T>//Ä£°å²ÎÊı´ú±í°ü×°º¯Êı²ÎÊıÀàĞÍ
+		template<typename T>//æ¨¡æ¿å‚æ•°ä»£è¡¨åŒ…è£…å‡½æ•°å‚æ•°ç±»å‹
 		using EventFn = std::function<bool(T&)>;
 	public:
 		EventDispatcher(Event& event) 
-			:m_Event(event){} //¹¹Ôìº¯Êı:½ÓÊÕÒ»¸öÊÂ¼ş¶ÔÏó
+			:m_Event(event){} //æ„é€ å‡½æ•°:æ¥æ”¶ä¸€ä¸ªäº‹ä»¶å¯¹è±¡
 		
 		template<typename T>
-		bool Dispatch(EventFn<T> func) //³¢ÊÔ½«ÊÂ¼ş·ÖÅÉ¸øÌØ¶¨ÀàĞÍµÄ´¦Àíº¯Êı
+		bool Dispatch(EventFn<T> func) //å°è¯•å°†äº‹ä»¶åˆ†æ´¾ç»™ç‰¹å®šç±»å‹çš„å¤„ç†å‡½æ•°
 		{
-			if (m_Event.GetEventType() == T::GetStaticType()) //¸ù¾İÊÂ¼şÀàĞÍÆ¥Åä½á¹û£¬Ö´ĞĞ¶ÔÓ¦µÄ´¦Àíº¯Êı²¢·µ»Ø´¦Àí½á¹û¡£
+			if (m_Event.GetEventType() == T::GetStaticType()) //æ ¹æ®äº‹ä»¶ç±»å‹åŒ¹é…ç»“æœï¼Œæ‰§è¡Œå¯¹åº”çš„å¤„ç†å‡½æ•°å¹¶è¿”å›å¤„ç†ç»“æœã€‚
 			{
 				/*
-				* ÀàĞÍ¼ì²é£º±È½Ïµ±Ç°ÊÂ¼şµÄÀàĞÍ£¨mEvent.GetEventType()£©ÊÇ·ñÓëÄ£°å²ÎÊı T µÄ¾²Ì¬ÀàĞÍ£¨T::GetStaticType()£©Ò»ÖÂ¡£
-				* ÀàĞÍ×ª»»£ºÈç¹ûÆ¥Åä³É¹¦£¬½« Event& Ç¿ÖÆ×ª»»Îª T&£¨ *** °²È«µÄÏòÏÂ×ªĞÍ£¬ÒòÎªÀàĞÍÒÑÈ·ÈÏ *** £©¡£
-				* Ö´ĞĞ´¦Àíº¯Êı£ºµ÷ÓÃ´«ÈëµÄ´¦Àíº¯Êı func£¬*** ²¢½«´¦Àí½á¹û£¨bool£©´æÈë m_Event.m_Handled *** ¡£
-				* ·µ»Ø½á¹û£º·µ»Ø true ±íÊ¾ÊÂ¼şÒÑ±»´¦Àí£¬·ñÔò·µ»Ø false¡£
+				* ç±»å‹æ£€æŸ¥ï¼šæ¯”è¾ƒå½“å‰äº‹ä»¶çš„ç±»å‹ï¼ˆmEvent.GetEventType()ï¼‰æ˜¯å¦ä¸æ¨¡æ¿å‚æ•° T çš„é™æ€ç±»å‹ï¼ˆT::GetStaticType()ï¼‰ä¸€è‡´ã€‚
+				* ç±»å‹è½¬æ¢ï¼šå¦‚æœåŒ¹é…æˆåŠŸï¼Œå°† Event& å¼ºåˆ¶è½¬æ¢ä¸º T&ï¼ˆ *** å®‰å…¨çš„å‘ä¸‹è½¬å‹ï¼Œå› ä¸ºç±»å‹å·²ç¡®è®¤ *** ï¼‰ã€‚
+				* æ‰§è¡Œå¤„ç†å‡½æ•°ï¼šè°ƒç”¨ä¼ å…¥çš„å¤„ç†å‡½æ•° funcï¼Œ*** å¹¶å°†å¤„ç†ç»“æœï¼ˆboolï¼‰å­˜å…¥ m_Event.m_Handled *** ã€‚
+				* è¿”å›ç»“æœï¼šè¿”å› true è¡¨ç¤ºäº‹ä»¶å·²è¢«å¤„ç†ï¼Œå¦åˆ™è¿”å› falseã€‚
 				*/
 				m_Event.m_Handled = func(*(T*)&m_Event);
 				return true;
@@ -99,12 +99,12 @@ namespace Sakura
 		if (e.GetKeyCode() == KEY_W) {
 			player.MoveForward();
 		}
-		return true; //·µ»Ø true ±íÊ¾ event ´¦ÓÚ´¦ÀíÊÂ¼ş×´Ì¬£¬·ñÔò·µ»Ø false¡£
+		return true; //è¿”å› true è¡¨ç¤º event å¤„äºå¤„ç†äº‹ä»¶çŠ¶æ€ï¼Œå¦åˆ™è¿”å› falseã€‚
 	});
 	*/
 
-	//½« Event ¶ÔÏóÖ±½ÓÊä³öµ½Á÷ÖĞ,ÎŞĞèÏÔÊ½µ÷ÓÃ ToString() ·½·¨
-	inline std::ostream& operator<<(std::ostream& os, const Event& e)//std::ostream ²»ÔÊĞí¿½±´¹¹Ôì£¬Òò´Ë²ÎÊı±ØĞëÊÇÒıÓÃÀàĞÍ std::ostream&
+	//å°† Event å¯¹è±¡ç›´æ¥è¾“å‡ºåˆ°æµä¸­,æ— éœ€æ˜¾å¼è°ƒç”¨ ToString() æ–¹æ³•
+	inline std::ostream& operator<<(std::ostream& os, const Event& e)//std::ostream ä¸å…è®¸æ‹·è´æ„é€ ï¼Œå› æ­¤å‚æ•°å¿…é¡»æ˜¯å¼•ç”¨ç±»å‹ std::ostream&
 	{
 		return os << e.ToString();
 	}

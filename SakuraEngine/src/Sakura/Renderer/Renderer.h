@@ -1,18 +1,17 @@
-#pragma once
+﻿#pragma once
+
+#include "Sakura/Renderer/RendererCommand.h"
+#include "Sakura/Renderer/RendererAPI.h"
 
 namespace Sakura
 {
-	enum class RendererAPI
-	{
-		None = 0,
-		OpenGL = 1,
-	};
-
 	class Renderer
 	{
 	public:
-		inline static RendererAPI GetAPI() { return s_RendererAPI; }
-	private:
-		static RendererAPI s_RendererAPI;
+		static void SceneBegin();
+		static void SceneEnd();   
+		static void Submit(const std::shared_ptr<VertexArray>& vertexArray);
+
+		inline static RendererAPI::API GetAPI() { return RendererAPI::GetRendererAPI(); }
 	};
 }

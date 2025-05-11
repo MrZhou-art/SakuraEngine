@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Event.h"
 
 
 namespace Sakura
 {
-	//´°¿Ú´óĞ¡ÊÂ¼ş
+	//çª—å£å¤§å°äº‹ä»¶
 	class SAKURA_API WindowResizeEvent : public Event
 	{
 	public:
@@ -28,7 +28,7 @@ namespace Sakura
 		int m_Width, m_Height;
 	};
 
-	//´°¿Ú¹Ø±ÕÊÂ¼ş
+	//çª—å£å…³é—­äº‹ä»¶
 	class SAKURA_API WindowCloseEvent : public Event
 	{
 	public:
@@ -38,7 +38,7 @@ namespace Sakura
 		EVENT_CLASS_TYPE(EventType::WindowClose)
 	};
 
-	//Ã¿Ö¡ÊÂ¼ş
+	//æ¯å¸§äº‹ä»¶
 	class SAKURA_API AppTickEvent : public Event
 	{
 	public:
@@ -48,7 +48,7 @@ namespace Sakura
 		EVENT_CLASS_TYPE(EventType::AppTick)
 	};
 
-	//¸üĞÂÊÂ¼ş
+	//æ›´æ–°äº‹ä»¶
 	class SAKURA_API AppUpdataEvent : public Event
 	{
 	public:
@@ -58,7 +58,7 @@ namespace Sakura
 		EVENT_CLASS_TYPE(EventType::AppUpdata)
 	};
 
-	//äÖÈ¾ÊÂ¼ş
+	//æ¸²æŸ“äº‹ä»¶
 	class SAKURA_API AppRenderEvent : public Event
 	{
 	public:

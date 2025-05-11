@@ -1,19 +1,19 @@
-#include "sakuraPCH.h"
+ï»¿#include "sakuraPCH.h"
 #include "Log.h"
-#include <spdlog/sinks/stdout_color_sinks.h>//ÈÕÖ¾ÑÕÉ«
+#include <spdlog/sinks/stdout_color_sinks.h>//æ—¥å¿—é¢œè‰²
 
 namespace Sakura
 {
-	//¾²Ì¬³ÉÔ±±ØĞëÔÚÀàÍâ³õÊ¼»¯
+	//é™æ€æˆå‘˜å¿…é¡»åœ¨ç±»å¤–åˆå§‹åŒ–
 	std::shared_ptr<spdlog::logger> Log::mCoreLogger = nullptr;
 	std::shared_ptr<spdlog::logger> Log::mClientLogger = nullptr;
 
-	void Log::initLog()// ³õÊ¼»¯ÈÕÖ¾
+	void Log::initLog()// åˆå§‹åŒ–æ—¥å¿—
 	{
-		//ÉèÖÃÈÕÖ¾Êä³ö¸ñÊ½(ÆğÊ¼ÑÕÉ«·¶Î§,Ê±¼ä,¼ÇÂ¼Æ÷µÄÃû³Æ,Òª¼ÇÂ¼µÄÊµ¼ÊÎÄ±¾,½áÊøÑÕÉ«·¶Î§)
+		//è®¾ç½®æ—¥å¿—è¾“å‡ºæ ¼å¼(èµ·å§‹é¢œè‰²èŒƒå›´,æ—¶é—´,è®°å½•å™¨çš„åç§°,è¦è®°å½•çš„å®é™…æ–‡æœ¬,ç»“æŸé¢œè‰²èŒƒå›´)
 		spdlog::set_pattern("%^[%T] %n %v%$");
 
-		//ÉèÖÃ¿ª·¢ºÍÓÃ»§ÈÕÖ¾¼ÇÂ¼Æ÷
+		//è®¾ç½®å¼€å‘å’Œç”¨æˆ·æ—¥å¿—è®°å½•å™¨
 		mCoreLogger = spdlog::stdout_color_mt("SAKURA");
 		mCoreLogger->set_level(spdlog::level::trace);
 

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Sakura/Renderer/Buffer.h"
 
@@ -11,9 +11,14 @@ namespace Sakura
 		~OpenGLVertexBuffer();
 
 		virtual void Bind() const override;
-		virtual void UnBind() const override;
+		virtual void Unbind() const override;
+
+		//缓冲布局
+		virtual void SetLayout(const BufferLayout& bufferLayout) override { m_BufferLayout = bufferLayout; }
+		virtual const BufferLayout& GetLayout() const override { return m_BufferLayout; }
 	private:
 		uint32_t m_RendererID;
+		BufferLayout m_BufferLayout;
 	};
 
 	class OpenGLIndexBuffer : public IndexBuffer
@@ -23,7 +28,7 @@ namespace Sakura
 		~OpenGLIndexBuffer();
 
 		virtual void Bind() const override;
-		virtual void UnBind() const override;
+		virtual void Unbind() const override;
 
 		virtual uint32_t GetCount() const override { return m_Count; }
 	private:

@@ -1,5 +1,7 @@
-#include "sakuraPCH.h"
+﻿#include "sakuraPCH.h"
 #include "Sakura/Renderer/Buffer.h"
+
+#include "Sakura/Renderer/Renderer.h"
 
 #include "Platform/OpenGL/OpenGLBuffer.h"
 
@@ -17,8 +19,8 @@ namespace Sakura
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::None:		SAKURA_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-		case RendererAPI::OpenGL:	return new OpenGLVertexBuffer(data, size);
+		case RendererAPI::API::None:		SAKURA_CORE_ASSERT(false, "RendererAPI::API::None is currently not supported!"); return nullptr;
+		case RendererAPI::API::OpenGL:		return new OpenGLVertexBuffer(data, size);
 		default:
 			SAKURA_CORE_ASSERT(false, "Unknow RendererAPI!");
 			return nullptr;
@@ -29,8 +31,8 @@ namespace Sakura
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::None:		SAKURA_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-		case RendererAPI::OpenGL:	return new OpenGLIndexBuffer(indices, count);
+		case RendererAPI::API::None:		SAKURA_CORE_ASSERT(false, "RendererAPI::API::None is currently not supported!"); return nullptr;
+		case RendererAPI::API::OpenGL:		return new OpenGLIndexBuffer(indices, count);
 		default:
 			SAKURA_CORE_ASSERT(false, "Unknow RendererAPI!");
 			return nullptr;

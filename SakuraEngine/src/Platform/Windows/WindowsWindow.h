@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Sakura/Window.h"
 #include "Sakura/Renderer/Context.h"
@@ -16,36 +16,36 @@ namespace Sakura
 
 		void OnUpdata() override;
 
-		virtual inline void* GetNativeWindow() const override { return m_Window; }//»ñÈ¡ GLFWwindow
+		virtual inline void* GetNativeWindow() const override { return m_Window; }//è·å– GLFWwindow
 
-		//´°¿ÚÊôĞÔ
+		//çª—å£å±æ€§
 		inline unsigned int GetWidth() const override { return m_Data.Width; }
 		inline unsigned int GetHeight() const override { return m_Data.Height; }
 
-		inline void SetEventCallback(const EventCallbackFn& callback) override { m_Data.EventCallback = callback; };//Ìá¹©ÉèÖÃ»Øµ÷º¯Êı½Ó¿Ú
-		void SetVSync(bool enabled) override;//ÉèÖÃ´¹Ö±Í¬²½
-		bool IsVSync() const override;//ÅĞ¶Ï´¹Ö±Í¬²½
+		inline void SetEventCallback(const EventCallbackFn& callback) override { m_Data.EventCallback = callback; };//æä¾›è®¾ç½®å›è°ƒå‡½æ•°æ¥å£
+		void SetVSync(bool enabled) override;//è®¾ç½®å‚ç›´åŒæ­¥
+		bool IsVSync() const override;//åˆ¤æ–­å‚ç›´åŒæ­¥
 	private:
-		virtual void Init(const WindowProps& props);//³õÊ¼»¯´°¿Ú
-		virtual void Shutdown();//ÇåÀí´°¿Ú×ÊÔ´£¬ÊÍ·Å·ÖÅäµÄÄÚ´æ£¬¹Ø±Õ´°¿Ú¡£
+		virtual void Init(const WindowProps& props);//åˆå§‹åŒ–çª—å£
+		virtual void Shutdown();//æ¸…ç†çª—å£èµ„æºï¼Œé‡Šæ”¾åˆ†é…çš„å†…å­˜ï¼Œå…³é—­çª—å£ã€‚
 	private:
-		GLFWwindow* m_Window;//ÉùÃ÷ GLFW ´°¿ÚÖ¸Õë,×÷Îª GLFW Ïà¹Øº¯ÊıµÄ²ÎÊı
-		Context* m_Context;//ÉùÃ÷ Context ÉÏÏÂÎÄÖ¸Õë,µ÷ÓÃ²»Í¬µÄ Í¼ĞÎ API 
+		GLFWwindow* m_Window;//å£°æ˜ GLFW çª—å£æŒ‡é’ˆ,ä½œä¸º GLFW ç›¸å…³å‡½æ•°çš„å‚æ•°
+		Context* m_Context;//å£°æ˜ Context ä¸Šä¸‹æ–‡æŒ‡é’ˆ,è°ƒç”¨ä¸åŒçš„ å›¾å½¢ API 
  
-		struct WindowData //´°¿ÚÊôĞÔ
+		struct WindowData //çª—å£å±æ€§
 		{
 			std::string Title;
 			unsigned int Width, Height;
-			bool VSync;//´¹Ö±Í¬²½
+			bool VSync;//å‚ç›´åŒæ­¥
 			/*
-			* ¿ªÆô VSync Ê±£¬Í¼ĞÎ´¦Àíµ¥Ôª£¨GPU£©»áÔÚÏÔÊ¾Æ÷Íê³ÉÒ»´Î´¹Ö±»ØÉ¨ºó£¬
-			* ²Å»á½«ĞÂµÄÒ»Ö¡Í¼Ïñ·¢ËÍµ½ÏÔÊ¾Æ÷½øĞĞÏÔÊ¾£¬ÕâÑù¿ÉÒÔÈ·±£ÆÁÄ»ÉÏÏÔÊ¾µÄÍ¼ÏñÊ¼ÖÕÊÇ
-			* ÍêÕûµÄ¡¢Ã»ÓĞËºÁÑÏÖÏóµÄ
+			* å¼€å¯ VSync æ—¶ï¼Œå›¾å½¢å¤„ç†å•å…ƒï¼ˆGPUï¼‰ä¼šåœ¨æ˜¾ç¤ºå™¨å®Œæˆä¸€æ¬¡å‚ç›´å›æ‰«åï¼Œ
+			* æ‰ä¼šå°†æ–°çš„ä¸€å¸§å›¾åƒå‘é€åˆ°æ˜¾ç¤ºå™¨è¿›è¡Œæ˜¾ç¤ºï¼Œè¿™æ ·å¯ä»¥ç¡®ä¿å±å¹•ä¸Šæ˜¾ç¤ºçš„å›¾åƒå§‹ç»ˆæ˜¯
+			* å®Œæ•´çš„ã€æ²¡æœ‰æ’•è£‚ç°è±¡çš„
 			*/
 
 			EventCallbackFn EventCallback;
 		};
 
-		WindowData m_Data;//×÷Îª´°¿ÚÓÃ»§Ö¸ÕëÖ¸Ïò¶ÔÏó
+		WindowData m_Data;//ä½œä¸ºçª—å£ç”¨æˆ·æŒ‡é’ˆæŒ‡å‘å¯¹è±¡
 	};
 }

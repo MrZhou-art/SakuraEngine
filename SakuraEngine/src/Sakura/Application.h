@@ -1,16 +1,19 @@
-#pragma once
+ï»¿#pragma once
+#include "Sakura/core.h"
 
 #include "Sakura/Events/Event.h"
 
+#include "Sakura/Input/Input.h"
+
 #include "Window.h"
 #include "Sakura/Layer/LayerStack.h"
-#include "Sakura/core.h"
 #include "Sakura/Events/ApplicationEvent.h"
 
 #include "ImGui/ImGuiLayer.h"
 
 #include "Sakura/Renderer/Buffer.h"
-//ÔİÊ±ÎÄ¼ş
+#include "Sakura/Renderer/VertexArray.h"
+#include "Sakura/Renderer/RendererAPI.h"
 #include "Sakura/Renderer/Shader.h"
 
 namespace Sakura
@@ -25,29 +28,33 @@ namespace Sakura
 
 
 
-		inline static Application& GetApplication() { return *s_Instance; }//»ñÈ¡È«¾ÖÎ¨Ò»ÊµÀıÖ¸Õë
-		inline Window& GetWindow() const { return *m_Window; }//»ñÈ¡´°»§
+		inline static Application& GetApplication() { return *s_Instance; }//è·å–å…¨å±€å”¯ä¸€å®ä¾‹æŒ‡é’ˆ
+		inline Window& GetWindow() const { return *m_Window; }//è·å–çª—æˆ·
 
-		void OnEvent(Event& e);//ÊÂ¼ş´¦Àí
+		void OnEvent(Event& e);//äº‹ä»¶å¤„ç†
 
-		void PushLayer(Layer* layer);//Ñ¹Õ»ÆÕÍ¨²ã
-		void PushOverLayer(Layer* overLayer);//Ñ¹Õ»¸²¸Ç²ã
+		void PushLayer(Layer* layer);//å‹æ ˆæ™®é€šå±‚
+		void PushOverLayer(Layer* overLayer);//å‹æ ˆè¦†ç›–å±‚
 	private:
-		bool OnWindowClose(WindowCloseEvent& e);//´°¿Ú¹Ø±ÕÊÂ¼ş
+		bool OnWindowClose(WindowCloseEvent& e);//çª—å£å…³é—­äº‹ä»¶
 
-		std::unique_ptr<Window> m_Window;//Ó¦ÓÃ²ã´°¿ÚÖ¸Õë
-		ImGuiLayer* m_ImGuiLayer;// ImGuiLayer Í¼²ã
-		bool m_Running = true;//Ñ­»·Ö´ĞĞ¿ª¹Ø
-		LayerStack m_LayerStack;//Í¼²ãÕ»
+	private:
+		std::unique_ptr<Window> m_Window;//åº”ç”¨å±‚çª—å£æŒ‡é’ˆ
 
-		// ------------ äÖÈ¾Æ÷ ---------------
-		uint32_t m_VertexArray;
+		// ------------ å›¾å±‚æ ˆ ---------------
+		ImGuiLayer* m_ImGuiLayer;// ImGuiLayer å›¾å±‚
+		bool m_Running = true;//å¾ªç¯æ‰§è¡Œå¼€å…³
+		LayerStack m_LayerStack;//å›¾å±‚æ ˆ
 
+		// ------------ æ¸²æŸ“å™¨ ---------------
 		std::unique_ptr<Shader>			m_Shader;
-		std::unique_ptr<VertexBuffer>	m_VertexBuffer;
-		std::unique_ptr<IndexBuffer>	m_IndexBuffer;
+		std::shared_ptr<VertexArray>	m_VertexArray;
+
+		std::unique_ptr<Shader>			m_SquareShader;
+		std::shared_ptr<VertexArray>	m_SquareVA;
+		
 	private:
-		static Application* s_Instance;//È«¾ÖÎ¨Ò»ÊµÀıÖ¸Õë
+		static Application* s_Instance;// å…¨å±€å”¯ä¸€å®ä¾‹æŒ‡é’ˆ
 	};
 
 	Application* createApplication();

@@ -1,14 +1,14 @@
-#pragma once
+ï»¿#pragma once
 #include "Sakura.h"
 
 #ifdef SKR_PLATFORM_WINDOWS
-//È«¾ÖÉùÃ÷
+//å…¨å±€å£°æ˜Ž
 extern Sakura::Application* Sakura::createApplication();
 
-//Òþ²ØÓÃ»§µÄÖ÷º¯Êý
+//éšè—ç”¨æˆ·çš„ä¸»å‡½æ•°
 int main(int argc,char** argv)
 {
-	Sakura::Log::initLog();// ***** ³õÊ¼»¯ÈÕÖ¾ *****
+	Sakura::Log::initLog();// ***** åˆå§‹åŒ–æ—¥å¿— *****
 
 	auto app = Sakura::createApplication();
 	app->Run();

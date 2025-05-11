@@ -1,6 +1,6 @@
-#pragma once
+ï»¿#pragma once
 
-// ÕâÊÇÒ»¸öÔ¤±àÒëÍ·ÎÄ¼şµÄÍ·ÎÄ¼ş
+// è¿™æ˜¯ä¸€ä¸ªé¢„ç¼–è¯‘å¤´æ–‡ä»¶çš„å¤´æ–‡ä»¶
 
 #include <iostream>
 #include <sstream>

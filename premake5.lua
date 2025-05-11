@@ -74,7 +74,7 @@ project "SakuraEngine"       -- 项目文件(.vcxproj)
         systemversion "latest"       -- 使用最新SDK，启用最新API
 
         buildoptions { "/utf-8" }    -- 启用UTF-8源代码和执行字符集
-            
+
         defines     --定义预处理宏
         {
             "SKR_PLATFORM_WINDOWS",

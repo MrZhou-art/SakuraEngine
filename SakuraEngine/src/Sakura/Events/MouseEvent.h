@@ -1,76 +1,76 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Event.h"
 
 namespace Sakura
 {
-	//Êó±êÎ»ÖÃÏûÏ¢
+	//é¼ æ ‡ä½ç½®æ¶ˆæ¯
 	class SAKURA_API MouseMovedEvent : public Event
 	{
 	public:
-		MouseMovedEvent(float x, float y) //¹¹Ôìº¯Êı(´«ÈëÊó±ê XY Î»ÖÃ)
+		MouseMovedEvent(float x, float y) //æ„é€ å‡½æ•°(ä¼ å…¥é¼ æ ‡ XY ä½ç½®)
 			: m_MouseX(x), m_MouseY(y) {}
 
-		inline float GetMouseX() const { return m_MouseX; } //»ñÈ¡Êó±ê X Î»ÖÃ
-		inline float GetMouseY() const { return m_MouseY; } //»ñÈ¡Êó±ê Y Î»ÖÃ
+		inline float GetMouseX() const { return m_MouseX; } //è·å–é¼ æ ‡ X ä½ç½®
+		inline float GetMouseY() const { return m_MouseY; } //è·å–é¼ æ ‡ Y ä½ç½®
 
-		std::string ToString() const override //Êä³öÊó±êĞÅÏ¢
+		std::string ToString() const override //è¾“å‡ºé¼ æ ‡ä¿¡æ¯
 		{
 			std::stringstream ss;
 			ss << "MouseX: " << m_MouseX << ", MouseY: " << m_MouseY;
 			return ss.str();
 		}
 
-		EVENT_CLASS_CATEGORY(EVENTCATEGORY_INPUT | EVENTCATEGORY_MOUSE)//Éú³É»ñÈ¡¸ÃÏûÏ¢ÖÖÀàµÄº¯Êı
-		EVENT_CLASS_TYPE(EventType::MouseMoved)//Éú³É Type Ïà¹ØµÄº¯Êı
+		EVENT_CLASS_CATEGORY(EVENTCATEGORY_INPUT | EVENTCATEGORY_MOUSE)//ç”Ÿæˆè·å–è¯¥æ¶ˆæ¯ç§ç±»çš„å‡½æ•°
+		EVENT_CLASS_TYPE(EventType::MouseMoved)//ç”Ÿæˆ Type ç›¸å…³çš„å‡½æ•°
 	private:
 		float m_MouseX, m_MouseY;
 	};
 
-	//Êó±ê¹öÂÖÏûÏ¢
+	//é¼ æ ‡æ»šè½®æ¶ˆæ¯
 	class SAKURA_API MouseScrolledEvent : public Event
 	{
 	public:
 		MouseScrolledEvent(float xOffset, float yOffset)
-			: m_XOffset(xOffset),m_YOffset(yOffset){}//¹¹Ôìº¯Êı(´«ÈëÊó±ê¹öÂÖ XY Î»ÖÃ)
+			: m_XOffset(xOffset),m_YOffset(yOffset){}//æ„é€ å‡½æ•°(ä¼ å…¥é¼ æ ‡æ»šè½® XY ä½ç½®)
 
-		inline float GetXOffset() const { return m_XOffset; } //»ñÈ¡Êó±ê¹öÂÖXÆ«ÒÆ
-		inline float GetYOffset() const { return m_YOffset; } //»ñÈ¡Êó±ê¹öÂÖYÆ«ÒÆ
+		inline float GetXOffset() const { return m_XOffset; } //è·å–é¼ æ ‡æ»šè½®Xåç§»
+		inline float GetYOffset() const { return m_YOffset; } //è·å–é¼ æ ‡æ»šè½®Yåç§»
 
-		std::string ToString() const override //Êä³öÊó±ê¹öÂÖĞÅÏ¢
+		std::string ToString() const override //è¾“å‡ºé¼ æ ‡æ»šè½®ä¿¡æ¯
 		{
 			std::stringstream ss;
 			ss << "MouseX offset: " << m_XOffset << ", MouseY offset: " << m_YOffset;
 			return ss.str();
 		}
 
-		EVENT_CLASS_CATEGORY(EVENTCATEGORY_INPUT | EVENTCATEGORY_MOUSE)//Éú³É»ñÈ¡¸ÃÏûÏ¢ÖÖÀàµÄº¯Êı
-		EVENT_CLASS_TYPE(EventType::MouseScrolled)//Éú³É Type Ïà¹ØµÄº¯Êı
+		EVENT_CLASS_CATEGORY(EVENTCATEGORY_INPUT | EVENTCATEGORY_MOUSE)//ç”Ÿæˆè·å–è¯¥æ¶ˆæ¯ç§ç±»çš„å‡½æ•°
+		EVENT_CLASS_TYPE(EventType::MouseScrolled)//ç”Ÿæˆ Type ç›¸å…³çš„å‡½æ•°
 	private:
 		float m_XOffset, m_YOffset;
 	};
 
-	//Êó±ê°´¼üÀà
+	//é¼ æ ‡æŒ‰é”®ç±»
 	class MouseButtonEvent : public Event
 	{
 	public:
-		inline int GetMouseButton() const { return m_MouseButton; }//»ñÈ¡Êó±ê°´¼üÖµ
+		inline int GetMouseButton() const { return m_MouseButton; }//è·å–é¼ æ ‡æŒ‰é”®å€¼
 
-		EVENT_CLASS_CATEGORY(EVENTCATEGORY_INPUT | EVENTCATEGORY_MOUSEBUTTON)//Éú³É»ñÈ¡ÊÂ¼şÖÖÀàÑÚÂëµÄ·½·¨
+		EVENT_CLASS_CATEGORY(EVENTCATEGORY_INPUT | EVENTCATEGORY_MOUSEBUTTON)//ç”Ÿæˆè·å–äº‹ä»¶ç§ç±»æ©ç çš„æ–¹æ³•
 	protected:
 		MouseButtonEvent(int mouseButton)
 			: m_MouseButton(mouseButton) {}
-		int m_MouseButton;//Êó±ê°´¼üÖµ
+		int m_MouseButton;//é¼ æ ‡æŒ‰é”®å€¼
 	};
 
-	//Êó±ê°´¼ü°´ÏÂ
+	//é¼ æ ‡æŒ‰é”®æŒ‰ä¸‹
 	class SAKURA_API MouseButtonPressedEvent : public MouseButtonEvent
 	{
 	public:
 		MouseButtonPressedEvent(int mouseButton)
 			: MouseButtonEvent(mouseButton) {}
 
-		std::string ToString() const override //Êä³öÊó±êĞÅÏ¢
+		std::string ToString() const override //è¾“å‡ºé¼ æ ‡ä¿¡æ¯
 		{
 			std::stringstream ss;
 			ss << "Mouse button: " << m_MouseButton;
@@ -80,14 +80,14 @@ namespace Sakura
 		EVENT_CLASS_TYPE(EventType::MouseButtonPressed)
 	};
 
-	//Êó±ê°´¼üËÉ¿ª
+	//é¼ æ ‡æŒ‰é”®æ¾å¼€
 	class SAKURA_API MouseButtonReleasedEvent : public MouseButtonEvent
 	{
 	public:
 		MouseButtonReleasedEvent(int mouseButton)
 			: MouseButtonEvent(mouseButton) {}
 
-		std::string ToString() const override //Êä³öÊó±êĞÅÏ¢
+		std::string ToString() const override //è¾“å‡ºé¼ æ ‡ä¿¡æ¯
 		{
 			std::stringstream ss;
 			ss << "Mouse button: " << m_MouseButton << " is released";

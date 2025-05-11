@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "sakuraPCH.h"
 
@@ -7,31 +7,31 @@
 
 namespace Sakura
 {
-	struct WindowProps //´°¿ÚÊôĞÔ
+	struct WindowProps //çª—å£å±æ€§
 	{
-		std::string		Title;//´°¿ÚÃû³Æ
-		unsigned int	Width;//¿í¶È
-		unsigned int	Height;//³¤¶È
+		std::string		Title;//çª—å£åç§°
+		unsigned int	Width;//å®½åº¦
+		unsigned int	Height;//é•¿åº¦
 
 		WindowProps(const std::string title = "Sakura Engine",
 					unsigned int width = 1280,
 					unsigned int height = 720)
-			: Title(title),Width(width),Height(height) {} //¹¹Ôìº¯Êı
+			: Title(title),Width(width),Height(height) {} //æ„é€ å‡½æ•°
 	};
 
-	//²»Í¬²Ù×÷ÏµÍ³×ÀÃæ½Ó¿Ú
+	//ä¸åŒæ“ä½œç³»ç»Ÿæ¡Œé¢æ¥å£
 	class SAKURA_API Window
 	{
 	public:
-		using EventCallbackFn = std::function<void(Sakura::Event&)>;//º¯Êı°ü×°Æ÷Ä£°å,ÊµÏÖ½Ó¿ÚÍ³Ò»
+		using EventCallbackFn = std::function<void(Sakura::Event&)>;//å‡½æ•°åŒ…è£…å™¨æ¨¡æ¿,å®ç°æ¥å£ç»Ÿä¸€
 
 		virtual ~Window() {}
 
 		virtual void OnUpdata() = 0;
 
-		virtual inline void* GetNativeWindow() const = 0;//·µ»Ø¿ÕÖ¸Õë¸ü¼ÓÍ¨ÓÃ
+		virtual inline void* GetNativeWindow() const = 0;//è¿”å›ç©ºæŒ‡é’ˆæ›´åŠ é€šç”¨
 		
-		//´°¿ÚÊôĞÔ(³¤¿í,ÊÂ¼ş»Øµ÷,´¹Ö±Í¬²½)
+		//çª—å£å±æ€§(é•¿å®½,äº‹ä»¶å›è°ƒ,å‚ç›´åŒæ­¥)
 		virtual unsigned int GetWidth() const = 0;
 		virtual unsigned int GetHeight() const = 0;
 
@@ -40,6 +40,6 @@ namespace Sakura
 		virtual void SetVSync(bool enabled) = 0;
 		virtual bool IsVSync() const = 0;
 
-		static Window* Create(const WindowProps& props = WindowProps());//¾²Ì¬´´½¨´°¿Ú·½·¨
+		static Window* Create(const WindowProps& props = WindowProps());//é™æ€åˆ›å»ºçª—å£æ–¹æ³•
 	};
 }

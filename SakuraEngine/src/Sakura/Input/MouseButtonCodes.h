@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 //from GLFW
 #define SAKURA_MOUSE_BUTTON_1         0

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 namespace Sakura
 {
 	class Shader
@@ -11,8 +9,8 @@ namespace Sakura
 		~Shader();
 
 		void Bind() const;
-		void UnBind() const;
+		void Unbind() const;
 	private:
-		uint32_t m_RenderID;
+		uint32_t m_RendererID;
 	};
 }

@@ -1,12 +1,12 @@
 #include "sakuraPCH.h"
 #include "Shader.h"
 
-#include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
 namespace Sakura
 {
 	Shader::Shader(const std::string& vertexSrc, const std::string& fragmentSrc)
+		: m_RendererID(0)
 	{
 		
 		// Create an empty vertex shader handle
@@ -73,8 +73,8 @@ namespace Sakura
 		// Vertex and fragment shaders are successfully compiled.
 		// Now time to link them together into a program.
 		// Get a program object.
-		m_RenderID = glCreateProgram();
-		GLuint& program = m_RenderID;
+		m_RendererID = glCreateProgram();
+		GLuint& program = m_RendererID;
 
 		// Attach our shaders to our program
 		glAttachShader(program, vertexShader);
@@ -112,13 +112,13 @@ namespace Sakura
 	}
 	Shader::~Shader()
 	{
-		glDeleteProgram(m_RenderID);
+		glDeleteProgram(m_RendererID);
 	}
 	void Shader::Bind() const
 	{
-		glUseProgram(m_RenderID);
+		glUseProgram(m_RendererID);
 	}
-	void Shader::UnBind() const
+	void Shader::Unbind() const
 	{
 		glUseProgram(0);
 	}
