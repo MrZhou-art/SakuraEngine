@@ -7,9 +7,6 @@
 
 namespace Sakura
 {
-	class VertexArray;
-	
-
 	class RendererAPI
 	{
 	public:

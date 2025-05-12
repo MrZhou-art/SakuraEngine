@@ -26,3 +26,6 @@ bin_int/
 
 # 子模块目录（如果不想追踪子模块变更）
 vendor/**/.git
+
+# imgui库初始信息
+.ini

@@ -16,6 +16,8 @@
 #include "Sakura/Renderer/RendererAPI.h"
 #include "Sakura/Renderer/Shader.h"
 
+#include "Sakura/Camera/OrthographicCamera.h"
+
 namespace Sakura
 {
 	class SAKURA_API Application
@@ -27,14 +29,15 @@ namespace Sakura
 		void Run();
 
 
-
-		inline static Application& GetApplication() { return *s_Instance; }//获取全局唯一实例指针
+		virtual void Render() {} // 渲染物体
 		inline Window& GetWindow() const { return *m_Window; }//获取窗户
 
 		void OnEvent(Event& e);//事件处理
 
 		void PushLayer(Layer* layer);//压栈普通层
 		void PushOverLayer(Layer* overLayer);//压栈覆盖层
+	public:
+		inline static Application& GetApplication() { return *s_Instance; }//获取全局唯一实例指针
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);//窗口关闭事件
 
@@ -47,12 +50,14 @@ namespace Sakura
 		LayerStack m_LayerStack;//图层栈
 
 		// ------------ 渲染器 ---------------
-		std::unique_ptr<Shader>			m_Shader;
+		std::shared_ptr<Shader>			m_Shader;
 		std::shared_ptr<VertexArray>	m_VertexArray;
 
-		std::unique_ptr<Shader>			m_SquareShader;
+		std::shared_ptr<Shader>			m_SquareShader;
 		std::shared_ptr<VertexArray>	m_SquareVA;
 		
+		//相机测试
+		OrthographicCamera m_Camera;
 	private:
 		static Application* s_Instance;// 全局唯一实例指针
 	};

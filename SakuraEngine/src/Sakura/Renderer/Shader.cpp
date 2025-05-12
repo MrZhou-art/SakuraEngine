@@ -114,6 +114,7 @@ namespace Sakura
 	{
 		glDeleteProgram(m_RendererID);
 	}
+
 	void Shader::Bind() const
 	{
 		glUseProgram(m_RendererID);
@@ -121,5 +122,11 @@ namespace Sakura
 	void Shader::Unbind() const
 	{
 		glUseProgram(0);
+	}
+	
+	void Shader::UploadUniform_Mat4(const glm::mat4& matrix4, const std::string& name)
+	{
+		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix4));
 	}
 }

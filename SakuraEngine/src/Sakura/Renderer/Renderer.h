@@ -2,16 +2,30 @@
 
 #include "Sakura/Renderer/RendererCommand.h"
 #include "Sakura/Renderer/RendererAPI.h"
+#include "Sakura/Renderer/Shader.h"
+
+#include "Sakura/Camera/OrthographicCamera.h"
 
 namespace Sakura
 {
 	class Renderer
 	{
 	public:
-		static void SceneBegin();
+		static void SceneBegin(const OrthographicCamera& camera);
 		static void SceneEnd();   
-		static void Submit(const std::shared_ptr<VertexArray>& vertexArray);
+		static void Submit(
+			const std::shared_ptr<VertexArray>&		vertexArray,
+			const std::shared_ptr<Shader>&			shader);
 
 		inline static RendererAPI::API GetAPI() { return RendererAPI::GetRendererAPI(); }
+	private:
+		struct SceneData // 作为接口,在渲染执行前,统一接受场景数据
+		{
+			glm::mat4 ViewProjectMartrix{1.0f};
+			
+			SceneData() {}
+		};
+	private:
+		static SceneData* s_SceneData;
 	};
 }

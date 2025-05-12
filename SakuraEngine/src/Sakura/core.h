@@ -4,17 +4,26 @@
 /*
 * 规范:
 * 1.函数名称,类名称,结构体名,文件名使用 大驼峰命名法
-* 2.类成员变量 m_Value,
-	结构体成员变量使用 大驼峰命名法,
-	形参使用 小驼峰命名法,
-	局部成员变量使用 小驼峰命名法, 
-	静态成员变量s_Value
+* 2.类成员变量			m_Value
+	结构体成员变量		使用 大驼峰命名法
+	函数形参			小驼峰命名法
+	局部成员变量		小驼峰命名法
+	静态成员变量		s_Value
+	Shader:
+		uniform 变量	u_Value
+		location() in   a_Value
+		in(VS)			v_Value
 * 3.宏 THIS_IS_A_MACRO
 * 4.用于二进制判断的枚举 THIS_IS_A_ENUM
 * 5.类成员顺序: 
 *		公开函数 > 私有函数 > 公开变量 > 私有变量				
 *		构造函数 > 析构函数 > 成员函数 > 静态成员函数 > 成员变量 > 静态成员变量 
 * 6.结构体顺序: 成员变量 > 成员函数 > 静态成员函数
+* 7.Shader 中顺序:
+*		layout() in > uniform > in > out > function > void main() ...
+*	
+*		
+* 8.类成员变量初始化:构造函数
 */
 
 //Sakura engine 支持 window x64 

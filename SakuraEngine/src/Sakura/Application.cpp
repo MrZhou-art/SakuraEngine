@@ -11,6 +11,7 @@ namespace Sakura
 	//inline Application& Application::GetApplication() { return *s_Instance; }//获取全局唯一实例指针
 
 	Application::Application()
+		: m_Camera{ -1.6f, 1.6f, -0.9f, 0.9f } // 正交相机的投影盒子长宽应和视窗长宽一致,否则相机旋转会压缩
 	{
 		// ------------ 窗口准备 --------------
 		SAKURA_CORE_ASSERT(!s_Instance, "Application already exists!");
@@ -23,7 +24,7 @@ namespace Sakura
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverLayer(m_ImGuiLayer);//将 ImGui 压入栈中
 
-		// ------------ 渲染准备 --------------
+		// ------------ 渲染准备 ----------------
 		// ************** 三角形 ********************
 		m_VertexArray.reset(VertexArray::Create()); // 顶点描述对象
 		std::shared_ptr<VertexBuffer>	m_VertexBuffer;
@@ -98,12 +99,14 @@ namespace Sakura
 			layout(location = 0) in vec3 a_Pos;
 			layout(location = 1) in vec4 a_Color;
 
+			uniform mat4 u_ViewProjectMartrix;
+			
 			out vec4 v_Color;			
 
 			void main()
 			{
 				v_Color = a_Color;
-				gl_Position = vec4(a_Pos, 1.0);
+				gl_Position = u_ViewProjectMartrix * vec4(a_Pos, 1.0);
 			}
 		)";
 
@@ -126,18 +129,21 @@ namespace Sakura
 			#version 460
 			layout(location = 0) in vec3 a_Pos;
 
+			uniform mat4 u_ViewProjectMartrix;
+
 			out vec3 v_Pos;			
 
 			void main()
 			{
 				v_Pos = a_Pos;
-				gl_Position = vec4(a_Pos, 1.0);
+				gl_Position = u_ViewProjectMartrix * vec4(a_Pos, 1.0);
 			}
 		)";
 
 		std::string SquarefragmentSrc = R"(
 			#version 460
 			layout(location = 0) out vec4 color;
+
 
 			in vec3 v_Pos;
 
@@ -155,20 +161,17 @@ namespace Sakura
 
 	void Application::Run()
 	{
-		printf("Welcome to Sakura engine\n");
+		SAKURA_INFO("Welcome to Sakura engine!");
 
 		while (m_Running)
 		{
 			RendererCommand::SetClearColor({ 0.192f, 0.192f, 0.192f, 1.00f });
 			RendererCommand::Clear();
 
-			Renderer::SceneBegin();
+			Renderer::SceneBegin(m_Camera);
 
-			m_SquareShader->Bind();
-			Renderer::Submit(m_SquareVA);
-
-			m_Shader->Bind();
-			Renderer::Submit(m_VertexArray);
+			Renderer::Submit(m_SquareVA,m_SquareShader);
+			Renderer::Submit(m_VertexArray,m_Shader);
 
 			Renderer::SceneEnd();
 
