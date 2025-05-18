@@ -80,7 +80,7 @@ namespace Sakura
 		ImGui::DestroyContext();
 	}
 
-	void ImGuiLayer::OnUpdata()
+	void ImGuiLayer::OnUpdata(Timestep ts)
 	{
 		
 	}

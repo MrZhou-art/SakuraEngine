@@ -120,7 +120,8 @@ namespace Sakura
 		uint32_t m_Stride;								// 步幅
 	};
 
-	class VertexBuffer // VBO
+	// --------------- VBO ---------------
+	class VertexBuffer 
 	{
 	public:
 		VertexBuffer() {}
@@ -136,7 +137,8 @@ namespace Sakura
 		static VertexBuffer* Create(float* data, uint32_t size);
 	};
 
-	class IndexBuffer // EBO (IBO)
+	// --------------- IBO ---------------
+	class IndexBuffer
 	{
 	public:
 		IndexBuffer() {}

@@ -11,7 +11,7 @@ namespace Sakura
 		
 		// Create an empty vertex shader handle
 		GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-
+		
 		// Send the vertex shader source code to GL
 		// Note that std::string's .c_str is NULL character terminated.
 		const GLchar* source = (const GLchar*)vertexSrc.c_str();
@@ -128,5 +128,10 @@ namespace Sakura
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix4));
+	}
+	void Shader::UploadUniform_Float4(const glm::vec4& float4, const std::string& name)
+	{
+		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		glUniform4f(location, float4.x, float4.y, float4.z, float4.w);
 	}
 }

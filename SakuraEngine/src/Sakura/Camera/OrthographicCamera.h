@@ -7,7 +7,9 @@ namespace Sakura
 	class OrthographicCamera
 	{
 	public:
-		OrthographicCamera(float left, float right, float bottom, float top);
+		OrthographicCamera(
+			const float& left, const float& right,
+			const float& bottom, const float& top);
 		~OrthographicCamera() {}
 
 		const glm::mat4& GetViewMatrix()		const { return m_ViewMatrix; }

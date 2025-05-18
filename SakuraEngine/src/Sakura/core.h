@@ -20,10 +20,11 @@
 *		构造函数 > 析构函数 > 成员函数 > 静态成员函数 > 成员变量 > 静态成员变量 
 * 6.结构体顺序: 成员变量 > 成员函数 > 静态成员函数
 * 7.Shader 中顺序:
-*		layout() in > uniform > in > out > function > void main() ...
-*	
-*		
-* 8.类成员变量初始化:构造函数
+*		layout() in > in > uniform > out > function > void main() ...
+* 8.变量初始化
+*		类成员:			构造函数
+*		结构体成员:		变量声明
+*
 */
 
 //Sakura engine 支持 window x64 
@@ -76,8 +77,8 @@
 	*	传递值：std::bind 默认会复制参数的值。
 	*	传递引用：若需要传递引用，使用 std::ref 或 std::cref。
 	*
-	*  std::function 类型的参数期望的是一个可直接调用的对象，而不是原始的成员函数指针
-	*  std::bind 作为适配事件系统的接口（如 std::function），确保回调能正确调用到成员函数
+	*  std::function	类型的参数期望的是一个可直接调用的对象，而不是原始的成员函数指针
+	*  std::bind		作为适配事件系统的接口（如 std::function），确保回调能正确调用到成员函数
 	*/
 #define BIND_EVENT_FN(func) std::bind(&func, this, std::placeholders::_1)
 

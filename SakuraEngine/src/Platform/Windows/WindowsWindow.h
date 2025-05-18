@@ -34,9 +34,9 @@ namespace Sakura
  
 		struct WindowData //窗口属性
 		{
-			std::string Title;
-			unsigned int Width, Height;
-			bool VSync;//垂直同步
+			std::string Title{ "window" };
+			unsigned int Width{ 0 }, Height{ 0 };
+			bool VSync{ false };//垂直同步
 			/*
 			* 开启 VSync 时，图形处理单元（GPU）会在显示器完成一次垂直回扫后，
 			* 才会将新的一帧图像发送到显示器进行显示，这样可以确保屏幕上显示的图像始终是

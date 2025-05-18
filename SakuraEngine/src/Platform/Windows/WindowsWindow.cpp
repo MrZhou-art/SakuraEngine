@@ -40,7 +40,7 @@ namespace Sakura
 		m_Data.Height = props.Height;
 		SetVSync(true);
 
-		SAKURA_CORE_INFO("Creating window {0}({1},{2})",
+		SAKURA_CORE_TRACE("Creating window {0}({1},{2})",
 			m_Data.Title, m_Data.Width, m_Data.Height);
 
 		// glfw 初始化
@@ -67,7 +67,6 @@ namespace Sakura
 				例如，一个应用有多个视图窗口展示相似内容，可让它们共享 OpenGL 资源。
 		*/
 		m_Window = glfwCreateWindow((int)m_Data.Width, (int)m_Data.Height, m_Data.Title.c_str(), nullptr, nullptr);//创建窗口
-		//***
 
 		//根据不同 图形 API 使用不同上下文类
 		m_Context = new OpenGLContext(m_Window);
@@ -81,6 +80,7 @@ namespace Sakura
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);//获取窗口自定义指针(自定义窗口数据结构体)
 				data.Width = width;//将监听数据记录在数据中
 				data.Height = height;
+				glViewport(0, 0, width, height);
 
 				WindowResizeEvent windowResize(width, height);//将监听数据封装成事件
 				data.EventCallback(windowResize);//根据对应事件调用对应函数
@@ -177,7 +177,7 @@ namespace Sakura
 	void WindowsWindow::SetVSync(bool enabled) //设置垂直同步
 	{
 		if (enabled)
-			glfwSwapInterval(1);
+			glfwSwapInterval(3);
 		else
 			glfwSwapInterval(0);
 

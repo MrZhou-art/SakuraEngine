@@ -3,6 +3,8 @@
 #include "Sakura/core.h"
 #include "Sakura/Events/Event.h"
 
+#include "Sakura/Core/Timestep.h"
+
 namespace Sakura
 {
 	class SAKURA_API Layer
@@ -22,7 +24,7 @@ namespace Sakura
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
-		virtual void OnUpdata() {}
+		virtual void OnUpdata(Timestep ts) {}
 		virtual void OnImGuiRender() {}
 		virtual void OnEvent(Event& e) {}
 
